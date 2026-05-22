@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Play } from "lucide-react";
+import Image from "next/image";
 
 export default function Hero() {
   const containerVariants = {
@@ -85,9 +86,12 @@ export default function Hero() {
           {/* Outer glow ring behind the logo */}
           <div className="absolute w-80 h-36 rounded-full bg-gradient-to-r from-shaz-purple to-shaz-magenta opacity-35 blur-[45px] animate-pulse pointer-events-none z-0" />
           
-          <img 
+          <Image 
             src="/logo.png" 
             alt="SHAZ Creatives Logo" 
+            width={400}
+            height={400}
+            priority
             className="relative z-10 h-64 md:h-80 w-auto object-contain" 
           />
         </motion.div>

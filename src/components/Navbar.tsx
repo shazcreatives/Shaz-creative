@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -59,9 +60,12 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
           {/* Logo */}
           <a href="#" className="flex items-center z-50 interactive group">
-            <img 
+            <Image 
               src="/logo.png" 
               alt="SHAZ Creatives Logo" 
+              width={150}
+              height={150}
+              priority
               className="h-24 md:h-28 w-auto object-contain -my-5 md:-my-7 transition-transform duration-300 group-hover:scale-105" 
             />
           </a>

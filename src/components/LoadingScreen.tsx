@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [count, setCount] = useState(0);
@@ -50,9 +51,12 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
           transition={{ duration: 0.8 }}
           className="z-10 mb-8 relative flex items-center justify-center"
         >
-          <img 
+          <Image 
             src="/logo.png" 
             alt="SHAZ Creatives Logo" 
+            width={240}
+            height={240}
+            priority
             className="h-36 md:h-48 w-auto object-contain" 
           />
         </motion.div>

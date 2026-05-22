@@ -2,6 +2,7 @@
 
 import React from "react";
 import { ArrowUp, MessageSquare, Mail, Award } from "lucide-react";
+import Image from "next/image";
 
 const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -58,9 +59,11 @@ export default function Footer() {
           {/* Logo & Manifesto */}
           <div className="md:col-span-5 flex flex-col gap-6">
             <a href="#" className="flex items-center interactive group">
-              <img 
+              <Image 
                 src="/logo.png" 
                 alt="SHAZ Creatives Logo" 
+                width={150}
+                height={150}
                 className="h-24 md:h-28 w-auto object-contain -my-4 md:-my-5 transition-transform duration-300 group-hover:scale-105" 
               />
             </a>

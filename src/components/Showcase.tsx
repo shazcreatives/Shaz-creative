@@ -16,17 +16,18 @@ interface ShowcaseItem {
   renderMockup: () => React.ReactNode;
 }
 
-interface ShowcaseInfoItemProps {
+interface ShowcaseSubComponentProps {
   item: ShowcaseItem;
   idx: number;
+  totalItems: number;
   smoothScrollProgress: MotionValue<number>;
-  itemsLength: number;
 }
 
-function ShowcaseInfoItem({ item, idx, smoothScrollProgress, itemsLength }: ShowcaseInfoItemProps) {
-  const rangeStart = idx / itemsLength;
-  const rangeEnd = (idx + 1) / itemsLength;
+function ShowcaseTextItem({ item, idx, totalItems, smoothScrollProgress }: ShowcaseSubComponentProps) {
+  const rangeStart = idx / totalItems;
+  const rangeEnd = (idx + 1) / totalItems;
 
+  // Create scroll triggers for opacity/translation
   const opacity = useTransform(
     smoothScrollProgress, 
     [rangeStart - 0.08, rangeStart, rangeEnd - 0.08, rangeEnd], 
@@ -67,15 +68,9 @@ function ShowcaseInfoItem({ item, idx, smoothScrollProgress, itemsLength }: Show
   );
 }
 
-interface ShowcaseProgressBarProps {
-  idx: number;
-  smoothScrollProgress: MotionValue<number>;
-  itemsLength: number;
-}
-
-function ShowcaseProgressBar({ idx, smoothScrollProgress, itemsLength }: ShowcaseProgressBarProps) {
-  const rangeStart = idx / itemsLength;
-  const rangeEnd = (idx + 1) / itemsLength;
+function ShowcaseProgressBar({ idx, totalItems, smoothScrollProgress }: { idx: number; totalItems: number; smoothScrollProgress: MotionValue<number> }) {
+  const rangeStart = idx / totalItems;
+  const rangeEnd = (idx + 1) / totalItems;
 
   const widthScale = useTransform(
     smoothScrollProgress,
@@ -96,17 +91,11 @@ function ShowcaseProgressBar({ idx, smoothScrollProgress, itemsLength }: Showcas
   );
 }
 
-interface ShowcaseMockupItemProps {
-  item: ShowcaseItem;
-  idx: number;
-  smoothScrollProgress: MotionValue<number>;
-  itemsLength: number;
-}
+function ShowcaseMockupItem({ item, idx, totalItems, smoothScrollProgress }: ShowcaseSubComponentProps) {
+  const rangeStart = idx / totalItems;
+  const rangeEnd = (idx + 1) / totalItems;
 
-function ShowcaseMockupItem({ item, idx, smoothScrollProgress, itemsLength }: ShowcaseMockupItemProps) {
-  const rangeStart = idx / itemsLength;
-  const rangeEnd = (idx + 1) / itemsLength;
-
+  // Transform scales and translations for right-hand previews
   const scale = useTransform(
     smoothScrollProgress, 
     [rangeStart - 0.08, rangeStart, rangeEnd - 0.08, rangeEnd], 
@@ -125,7 +114,7 @@ function ShowcaseMockupItem({ item, idx, smoothScrollProgress, itemsLength }: Sh
 
   return (
     <motion.div
-      style={{ scale, opacity, rotate, zIndex: itemsLength - idx }}
+      style={{ scale, opacity, rotate, zIndex: totalItems - idx }}
       className="absolute inset-0"
     >
       {item.renderMockup()}
@@ -367,12 +356,12 @@ export default function Showcase() {
 
               <div className="relative min-h-[320px]">
                 {items.map((item, idx) => (
-                  <ShowcaseInfoItem
+                  <ShowcaseTextItem
                     key={item.id}
                     item={item}
                     idx={idx}
+                    totalItems={items.length}
                     smoothScrollProgress={smoothScrollProgress}
-                    itemsLength={items.length}
                   />
                 ))}
               </div>
@@ -383,8 +372,8 @@ export default function Showcase() {
                   <ShowcaseProgressBar
                     key={item.id}
                     idx={idx}
+                    totalItems={items.length}
                     smoothScrollProgress={smoothScrollProgress}
-                    itemsLength={items.length}
                   />
                 ))}
               </div>
@@ -401,8 +390,8 @@ export default function Showcase() {
                     key={item.id}
                     item={item}
                     idx={idx}
+                    totalItems={items.length}
                     smoothScrollProgress={smoothScrollProgress}
-                    itemsLength={items.length}
                   />
                 ))}
               </div>
@@ -415,3 +404,4 @@ export default function Showcase() {
     </section>
   );
 }
+
