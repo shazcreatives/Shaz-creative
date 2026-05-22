@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   Share2, Palette, Video, Film, Sparkles, 
   Camera, TrendingUp, Clapperboard, Megaphone, Laptop,
@@ -19,7 +19,7 @@ function ServiceCard({
 }: { 
   title: string; 
   description: string; 
-  icon: React.ComponentType<{ className?: string }>; 
+  icon: React.ComponentType<any>; 
   colorClass: string;
   label: string;
   isActive: boolean;

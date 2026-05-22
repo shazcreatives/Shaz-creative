@@ -371,7 +371,7 @@ export default function Pricing() {
                 transition={{ duration: 0.5 }}
                 className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch"
               >
-                {smmCampaigns.map((pkg) => (
+                {smmCampaigns.map((pkg, idx) => (
                   <div
                     key={pkg.name}
                     className={`relative rounded-3xl p-8 flex flex-col justify-between overflow-hidden transition-all duration-500 hover:-translate-y-1 ${
@@ -463,7 +463,7 @@ export default function Pricing() {
                 transition={{ duration: 0.5 }}
                 className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch"
               >
-                {smmMonthly.map((pkg) => (
+                {smmMonthly.map((pkg, idx) => (
                   <div
                     key={pkg.name}
                     className={`relative rounded-3xl p-8 flex flex-col justify-between overflow-hidden transition-all duration-500 hover:-translate-y-1 ${

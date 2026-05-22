@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring, MotionValue } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { Camera, Layers, Sliders, Smartphone, Sparkles } from "lucide-react";
 
 interface ShowcaseItem {
@@ -10,114 +10,11 @@ interface ShowcaseItem {
   category: string;
   description: string;
   tagline: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<any>;
   accentColor: string;
+  // This renders the custom premium interactive UI mockup for this category
   renderMockup: () => React.ReactNode;
 }
-
-interface ShowcaseSubComponentProps {
-  item: ShowcaseItem;
-  idx: number;
-  total: number;
-  smoothScrollProgress: MotionValue<number>;
-}
-
-const ShowcaseInfoItem = ({ item, idx, total, smoothScrollProgress }: ShowcaseSubComponentProps) => {
-  const rangeStart = idx / total;
-  const rangeEnd = (idx + 1) / total;
-
-  const opacity = useTransform(
-    smoothScrollProgress, 
-    [rangeStart - 0.08, rangeStart, rangeEnd - 0.08, rangeEnd], 
-    [0, 1, 1, 0]
-  );
-  const y = useTransform(
-    smoothScrollProgress, 
-    [rangeStart - 0.08, rangeStart, rangeEnd - 0.08, rangeEnd], 
-    [30, 0, 0, -30]
-  );
-
-  return (
-    <motion.div
-      style={{ opacity, y, pointerEvents: idx === 0 ? "auto" : "none" }}
-      className={`absolute inset-0 flex flex-col justify-center ${idx === 0 ? "relative" : ""}`}
-    >
-      <div className="flex items-center gap-2 mb-4">
-        <div className={`w-8 h-8 rounded-lg bg-gradient-to-r ${item.accentColor} flex items-center justify-center`}>
-          <item.icon className="w-4 h-4 text-shaz-white" />
-        </div>
-        <span className="text-xs font-bold tracking-[0.2em] font-mono text-shaz-white/60 uppercase">
-          {item.category}
-        </span>
-      </div>
-
-      <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-shaz-white mb-4 leading-tight">
-        {item.title}
-      </h2>
-      
-      <p className="text-sm md:text-base font-semibold text-gradient-purple-magenta mb-4">
-        {item.tagline}
-      </p>
-
-      <p className="text-sm md:text-base text-shaz-white/50 font-light leading-relaxed max-w-lg">
-        {item.description}
-      </p>
-    </motion.div>
-  );
-};
-
-const ShowcaseProgressBar = ({ idx, total, smoothScrollProgress }: { idx: number; total: number; smoothScrollProgress: MotionValue<number> }) => {
-  const rangeStart = idx / total;
-  const rangeEnd = (idx + 1) / total;
-
-  const widthScale = useTransform(
-    smoothScrollProgress,
-    [rangeStart, rangeEnd],
-    ["0%", "100%"]
-  );
-
-  return (
-    <div className="h-[2px] flex-grow bg-white/10 rounded-full overflow-hidden relative">
-      <motion.div
-        style={{
-          width: widthScale,
-          backgroundColor: idx % 2 === 0 ? "#8A2BE2" : "#D946EF"
-        }}
-        className="h-full absolute left-0 top-0"
-      />
-    </div>
-  );
-};
-
-const ShowcaseMockupItem = ({ item, idx, total, smoothScrollProgress }: ShowcaseSubComponentProps) => {
-  const rangeStart = idx / total;
-  const rangeEnd = (idx + 1) / total;
-
-  const scale = useTransform(
-    smoothScrollProgress, 
-    [rangeStart - 0.08, rangeStart, rangeEnd - 0.08, rangeEnd], 
-    [0.85, 1, 1, 0.85]
-  );
-  const opacity = useTransform(
-    smoothScrollProgress, 
-    [rangeStart - 0.08, rangeStart, rangeEnd - 0.08, rangeEnd], 
-    [0, 1, 1, 0]
-  );
-  const rotate = useTransform(
-    smoothScrollProgress, 
-    [rangeStart - 0.08, rangeStart, rangeEnd - 0.08, rangeEnd], 
-    [4, 0, 0, -4]
-  );
-
-  return (
-    <motion.div
-      style={{ scale, opacity, rotate, zIndex: total - idx }}
-      className="absolute inset-0"
-    >
-      {item.renderMockup()}
-    </motion.div>
-  );
-};
 
 export default function Showcase() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -352,27 +249,77 @@ export default function Showcase() {
               </div>
 
               <div className="relative min-h-[320px]">
-                {items.map((item, idx) => (
-                  <ShowcaseInfoItem
-                    key={item.id}
-                    item={item}
-                    idx={idx}
-                    total={items.length}
-                    smoothScrollProgress={smoothScrollProgress}
-                  />
-                ))}
+                {items.map((item, idx) => {
+                  const rangeStart = idx / items.length;
+                  const rangeEnd = (idx + 1) / items.length;
+
+                  // Create scroll triggers for opacity/translation
+                  const opacity = useTransform(
+                    smoothScrollProgress, 
+                    [rangeStart - 0.08, rangeStart, rangeEnd - 0.08, rangeEnd], 
+                    [0, 1, 1, 0]
+                  );
+                  const y = useTransform(
+                    smoothScrollProgress, 
+                    [rangeStart - 0.08, rangeStart, rangeEnd - 0.08, rangeEnd], 
+                    [30, 0, 0, -30]
+                  );
+
+                  return (
+                    <motion.div
+                      key={item.id}
+                      style={{ opacity, y, pointerEvents: idx === 0 ? "auto" : "none" }}
+                      className={`absolute inset-0 flex flex-col justify-center ${idx === 0 ? "relative" : ""}`}
+                    >
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className={`w-8 h-8 rounded-lg bg-gradient-to-r ${item.accentColor} flex items-center justify-center`}>
+                          <item.icon className="w-4 h-4 text-shaz-white" />
+                        </div>
+                        <span className="text-xs font-bold tracking-[0.2em] font-mono text-shaz-white/60 uppercase">
+                          {item.category}
+                        </span>
+                      </div>
+
+                      <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-shaz-white mb-4 leading-tight">
+                        {item.title}
+                      </h2>
+                      
+                      <p className="text-sm md:text-base font-semibold text-gradient-purple-magenta mb-4">
+                        {item.tagline}
+                      </p>
+
+                      <p className="text-sm md:text-base text-shaz-white/50 font-light leading-relaxed max-w-lg">
+                        {item.description}
+                      </p>
+                    </motion.div>
+                  );
+                })}
               </div>
 
               {/* Progress Bar Indicators */}
               <div className="mt-8 flex gap-2">
-                {items.map((item, idx) => (
-                  <ShowcaseProgressBar
-                    key={item.id}
-                    idx={idx}
-                    total={items.length}
-                    smoothScrollProgress={smoothScrollProgress}
-                  />
-                ))}
+                {items.map((item, idx) => {
+                  const rangeStart = idx / items.length;
+                  const rangeEnd = (idx + 1) / items.length;
+
+                  const widthScale = useTransform(
+                    smoothScrollProgress,
+                    [rangeStart, rangeEnd],
+                    ["0%", "100%"]
+                  );
+
+                  return (
+                    <div key={item.id} className="h-[2px] flex-grow bg-white/10 rounded-full overflow-hidden relative">
+                      <motion.div
+                        style={{
+                          width: widthScale,
+                          backgroundColor: idx % 2 === 0 ? "#8A2BE2" : "#D946EF"
+                        }}
+                        className="h-full absolute left-0 top-0"
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -382,15 +329,37 @@ export default function Showcase() {
               <div className="absolute inset-0 bg-radial-glow-purple scale-125 z-0" />
               
               <div className="w-full h-full relative z-10">
-                {items.map((item, idx) => (
-                  <ShowcaseMockupItem
-                    key={item.id}
-                    item={item}
-                    idx={idx}
-                    total={items.length}
-                    smoothScrollProgress={smoothScrollProgress}
-                  />
-                ))}
+                {items.map((item, idx) => {
+                  const rangeStart = idx / items.length;
+                  const rangeEnd = (idx + 1) / items.length;
+
+                  // Transform scales and translations for right-hand previews
+                  const scale = useTransform(
+                    smoothScrollProgress, 
+                    [rangeStart - 0.08, rangeStart, rangeEnd - 0.08, rangeEnd], 
+                    [0.85, 1, 1, 0.85]
+                  );
+                  const opacity = useTransform(
+                    smoothScrollProgress, 
+                    [rangeStart - 0.08, rangeStart, rangeEnd - 0.08, rangeEnd], 
+                    [0, 1, 1, 0]
+                  );
+                  const rotate = useTransform(
+                    smoothScrollProgress, 
+                    [rangeStart - 0.08, rangeStart, rangeEnd - 0.08, rangeEnd], 
+                    [4, 0, 0, -4]
+                  );
+
+                  return (
+                    <motion.div
+                      key={item.id}
+                      style={{ scale, opacity, rotate, zIndex: items.length - idx }}
+                      className="absolute inset-0"
+                    >
+                      {item.renderMockup()}
+                    </motion.div>
+                  );
+                })}
               </div>
             </div>
 
