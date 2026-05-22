@@ -221,7 +221,9 @@ export default function Services() {
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
-      if (window.innerWidth < 640) {
+      if (window.innerWidth < 480) {
+        setCardWidth(180);
+      } else if (window.innerWidth < 640) {
         setCardWidth(200);
       } else if (window.innerWidth < 1024) {
         setCardWidth(240);
@@ -247,8 +249,8 @@ export default function Services() {
 
   // Calculates x, scale, opacity, blur, and zIndex for a flat, linear scale carousel
   const getCardTransforms = (idxDiff: number) => {
-    // Increased spacing multiplier to provide padding and remove overlapping
-    const spacing = cardWidth * (isMobile ? 0.85 : 1.08);
+    // Increased spacing multiplier to provide padding and remove overlapping on mobile
+    const spacing = cardWidth * (isMobile ? 1.15 : 1.08);
     const absDiff = Math.abs(idxDiff);
 
     // Hide everything beyond the immediate neighbors on mobile (3 cards visible max)
@@ -266,11 +268,11 @@ export default function Services() {
 
     switch (idxDiff) {
       case 0:
-        return { x, scale: 1.15, opacity: 1, blur: 0, zIndex: 100 };
+        return { x, scale: isMobile ? 1.1 : 1.15, opacity: 1, blur: 0, zIndex: 100 };
       case 1:
-        return { x, scale: 0.9, opacity: 0.95, blur: 1.2, zIndex: 50 };
+        return { x, scale: isMobile ? 0.82 : 0.9, opacity: isMobile ? 0.45 : 0.95, blur: isMobile ? 1.8 : 1.2, zIndex: 50 };
       case -1:
-        return { x, scale: 0.9, opacity: 0.95, blur: 1.2, zIndex: 50 };
+        return { x, scale: isMobile ? 0.82 : 0.9, opacity: isMobile ? 0.45 : 0.95, blur: isMobile ? 1.8 : 1.2, zIndex: 50 };
       case 2:
         return { x, scale: 0.76, opacity: 0.8, blur: 3, zIndex: 20 };
       case -2:
@@ -331,7 +333,7 @@ export default function Services() {
         <div className="relative w-full h-[300px] flex items-center justify-center overflow-visible mt-6">
           
           {/* Left/Right Floating Navigation */}
-          <div className="absolute left-0 lg:-left-6 top-1/2 -translate-y-1/2 z-30">
+          <div className="absolute left-0 lg:-left-6 top-1/2 -translate-y-1/2 z-30 hidden sm:block">
             <button
               onClick={() => setActiveIndex((prev) => prev - 1)}
               className="w-10 h-10 md:w-12 md:h-12 rounded-full glass-card border border-white/5 hover:border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all duration-300 interactive shadow-lg hover:bg-white/5 active:scale-95"
@@ -341,7 +343,7 @@ export default function Services() {
             </button>
           </div>
           
-          <div className="absolute right-0 lg:-right-6 top-1/2 -translate-y-1/2 z-30">
+          <div className="absolute right-0 lg:-right-6 top-1/2 -translate-y-1/2 z-30 hidden sm:block">
             <button
               onClick={() => setActiveIndex((prev) => prev + 1)}
               className="w-10 h-10 md:w-12 md:h-12 rounded-full glass-card border border-white/5 hover:border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all duration-300 interactive shadow-lg hover:bg-white/5 active:scale-95"
