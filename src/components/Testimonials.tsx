@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
 
@@ -116,7 +116,7 @@ export default function Testimonials() {
                 <div className="flex flex-col text-left">
                   <span className="text-sm font-bold text-white tracking-wide">{t.name}</span>
                   <span className="text-[10px] text-white/40 font-mono tracking-wider uppercase mt-0.5">
-                    {t.role} // <span className="text-shaz-magenta">{t.company}</span>
+                    {t.role} {"// "} <span className="text-shaz-magenta">{t.company}</span>
                   </span>
                 </div>
               </div>
