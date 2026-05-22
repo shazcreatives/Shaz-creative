@@ -222,9 +222,9 @@ export default function Services() {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
       if (window.innerWidth < 480) {
-        setCardWidth(180);
+        setCardWidth(Math.min(window.innerWidth - 64, 280));
       } else if (window.innerWidth < 640) {
-        setCardWidth(200);
+        setCardWidth(Math.min(window.innerWidth - 80, 280));
       } else if (window.innerWidth < 1024) {
         setCardWidth(240);
       } else {
@@ -249,8 +249,8 @@ export default function Services() {
 
   // Calculates x, scale, opacity, blur, and zIndex for a flat, linear scale carousel
   const getCardTransforms = (idxDiff: number) => {
-    // Increased spacing multiplier to provide padding and remove overlapping on mobile
-    const spacing = cardWidth * (isMobile ? 1.15 : 1.08);
+    // Spacing multiplier adjusted to prevent congestion on mobile
+    const spacing = cardWidth * (isMobile ? 1.25 : 1.08);
     const absDiff = Math.abs(idxDiff);
 
     // Hide everything beyond the immediate neighbors on mobile (3 cards visible max)
@@ -268,13 +268,11 @@ export default function Services() {
 
     switch (idxDiff) {
       case 0:
-        return { x, scale: isMobile ? 1.1 : 1.15, opacity: 1, blur: 0, zIndex: 100 };
+        return { x, scale: isMobile ? 1.0 : 1.15, opacity: 1, blur: 0, zIndex: 100 };
       case 1:
-        return { x, scale: isMobile ? 0.82 : 0.9, opacity: isMobile ? 0.45 : 0.95, blur: isMobile ? 1.8 : 1.2, zIndex: 50 };
       case -1:
-        return { x, scale: isMobile ? 0.82 : 0.9, opacity: isMobile ? 0.45 : 0.95, blur: isMobile ? 1.8 : 1.2, zIndex: 50 };
+        return { x, scale: isMobile ? 0.8 : 0.9, opacity: isMobile ? 0.25 : 0.95, blur: isMobile ? 2.5 : 1.2, zIndex: 50 };
       case 2:
-        return { x, scale: 0.76, opacity: 0.8, blur: 3, zIndex: 20 };
       case -2:
         return { x, scale: 0.76, opacity: 0.8, blur: 3, zIndex: 20 };
       default:
@@ -330,7 +328,7 @@ export default function Services() {
         </div>
 
         {/* 3D Flat Carousel Scene */}
-        <div className="relative w-full h-[300px] flex items-center justify-center overflow-visible mt-6">
+        <div className="relative w-full h-[340px] sm:h-[300px] flex items-center justify-center overflow-visible mt-6 md:mt-8">
           
           {/* Left/Right Floating Navigation */}
           <div className="absolute left-0 lg:-left-6 top-1/2 -translate-y-1/2 z-30 hidden sm:block">
@@ -387,7 +385,7 @@ export default function Services() {
                     className="absolute"
                     style={{
                       width: `${cardWidth}px`,
-                      height: "220px",
+                      height: isMobile ? "260px" : "220px",
                     }}
                     animate={{
                       x: x,
