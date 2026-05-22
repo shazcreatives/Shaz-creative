@@ -2,7 +2,84 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Phone, Mail, MessageSquare, CheckCircle, ArrowRight, MapPin } from "lucide-react";
+import { Phone, CheckCircle, ArrowRight, MapPin } from "lucide-react";
+
+const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      fill="#25D366"
+      d="M12.004 2C6.48 2 2.004 6.477 2.004 12c0 1.767.46 3.427 1.267 4.873l-1.35 4.927 5.04-1.32c1.4.76 2.99 1.187 4.673 1.187 5.523 0 10-4.477 10-10S17.527 2 12.004 2z"
+    />
+    <path
+      fill="#FFF"
+      d="M12.004 3.793a8.18 8.18 0 018.204 8.207 8.18 8.18 0 01-8.204 8.207c-1.53 0-2.983-.42-4.242-1.15l-.304-.176-3.14.823.839-3.06-.196-.312a8.15 8.15 0 01-1.161-4.332 8.18 8.18 0 018.204-8.207zm4.986 9.873c-.273-.137-1.618-.8-1.868-.89-.25-.09-.432-.136-.614.137-.182.272-.705.89-.864 1.072-.159.18-.318.205-.59.068a7.48 7.48 0 01-2.193-1.35 8.24 8.24 0 01-1.517-1.89c-.16-.273-.017-.42.12-.556.122-.122.272-.317.409-.476.136-.16.182-.272.272-.454.09-.181.046-.34-.022-.477-.069-.136-.614-1.477-.841-2.023-.222-.53-.448-.46-.614-.467-.16-.008-.34-.008-.523-.008-.182 0-.477.068-.727.34-.25.273-1.023 1.002-1.023 2.443 0 1.442 1.05 2.836 1.196 3.033.146.198 2.067 3.16 5.01 4.432.7.303 1.246.484 1.673.62.704.223 1.345.19 1.854.115.568-.084 1.748-.714 1.998-1.405.25-.69.25-1.284.175-1.405-.075-.12-.273-.18-.546-.318z"
+    />
+  </svg>
+);
+
+const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="url(#insta-grad-contact)"
+    strokeWidth="2.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <defs>
+      <linearGradient id="insta-grad-contact" x1="100%" y1="100%" x2="0%" y2="0%">
+        <stop offset="0%" stopColor="#fdf497" />
+        <stop offset="5%" stopColor="#fdf497" />
+        <stop offset="45%" stopColor="#fd5949" />
+        <stop offset="60%" stopColor="#d6249f" />
+        <stop offset="90%" stopColor="#285AEB" />
+      </linearGradient>
+    </defs>
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+  </svg>
+);
+
+const GmailIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      fill="#4285F4"
+      d="M4 20h3V9.3L4 7v13z"
+    />
+    <path
+      fill="#34A853"
+      d="M17 20h3V7l-3 2.3V20z"
+    />
+    <path
+      fill="#FBBC05"
+      d="M4 7v2.3l3 2.2V9.3L4 7z"
+    />
+    <path
+      fill="#EA4335"
+      d="M17 9.3v2.2l3-2.2V7l-3 2.3z"
+    />
+    <path
+      fill="#EA4335"
+      d="M7 9.3v10.7h10V9.3L12 13 7 9.3z"
+    />
+    <path
+      fill="#C4211B"
+      d="M12 13l5-3.7V7c0-.55-.45-1-1-1H8c-.55 0-1 .45-1 1v2.3l5 3.7z"
+    />
+  </svg>
+);
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -101,13 +178,13 @@ export default function Contact() {
               </p>
 
               {/* Direct Channels */}
-              <div className="flex flex-col gap-5 mb-10">
+              <div className="flex flex-col gap-4 mb-8">
                 <a
                   href="tel:+919884522083"
-                  className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 hover:bg-white/10 transition-all duration-350 interactive"
+                  className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-[#38BDF8]/30 hover:bg-[#38BDF8]/5 hover:shadow-[0_0_20px_rgba(56,189,248,0.15)] transition-all duration-350 interactive group"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-shaz-purple/10 flex items-center justify-center text-shaz-purple">
-                    <Phone className="w-4 h-4" />
+                  <div className="w-12 h-12 rounded-2xl bg-[#38BDF8]/10 flex items-center justify-center text-[#38BDF8] group-hover:scale-105 transition-all duration-350 shrink-0">
+                    <Phone className="w-5.5 h-5.5" />
                   </div>
                   <div className="flex flex-col">
                     <span className="text-[10px] text-white/45 font-mono uppercase">Call Creative Desk</span>
@@ -117,10 +194,10 @@ export default function Contact() {
 
                 <a
                   href="mailto:shazconsulting77@gmail.com"
-                  className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 hover:bg-white/10 transition-all duration-350 interactive"
+                  className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-[#EA4335]/30 hover:bg-[#EA4335]/5 hover:shadow-[0_0_20px_rgba(234,67,53,0.15)] transition-all duration-350 interactive group"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-shaz-magenta/10 flex items-center justify-center text-shaz-magenta">
-                    <Mail className="w-4 h-4" />
+                  <div className="w-12 h-12 rounded-2xl bg-[#EA4335]/10 flex items-center justify-center group-hover:scale-105 transition-all duration-350 shrink-0">
+                    <GmailIcon className="w-6 h-6" />
                   </div>
                   <div className="flex flex-col">
                     <span className="text-[10px] text-white/45 font-mono uppercase">Email Creative Desk</span>
@@ -132,14 +209,29 @@ export default function Contact() {
                   href="https://wa.me/919884522083"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-green-500/10 to-green-600/5 border border-green-500/20 hover:border-green-500/30 hover:bg-green-500/15 transition-all duration-350 interactive"
+                  className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-[#25D366]/30 hover:bg-[#25D366]/5 hover:shadow-[0_0_20px_rgba(37,211,102,0.15)] transition-all duration-350 interactive group"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-green-500/15 flex items-center justify-center text-green-500">
-                    <MessageSquare className="w-4 h-4" />
+                  <div className="w-12 h-12 rounded-2xl bg-[#25D366]/10 flex items-center justify-center group-hover:scale-105 transition-all duration-350 shrink-0">
+                    <WhatsAppIcon className="w-6.5 h-6.5" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[10px] text-green-400 font-mono uppercase">WhatsApp Chat</span>
+                    <span className="text-[10px] text-white/45 font-mono uppercase">WhatsApp Chat</span>
                     <span className="text-sm font-bold text-white">Open Instant WhatsApp Link</span>
+                  </div>
+                </a>
+
+                <a
+                  href="https://www.instagram.com/_shaz_creative_/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-pink-500/30 hover:bg-pink-500/5 hover:shadow-[0_0_20px_rgba(236,72,153,0.15)] transition-all duration-350 interactive group"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-pink-500/10 flex items-center justify-center group-hover:scale-105 transition-all duration-350 shrink-0">
+                    <InstagramIcon className="w-6 h-6" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] text-white/45 font-mono uppercase">Instagram Direct</span>
+                    <span className="text-sm font-bold text-white">@_shaz_creative_</span>
                   </div>
                 </a>
               </div>
