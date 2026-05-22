@@ -40,7 +40,7 @@ function ServiceCard({
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      className={`relative w-full h-full overflow-hidden rounded-2xl border transition-all duration-500 flex flex-col justify-between p-6 md:p-8 select-none ${
+      className={`relative w-full h-full overflow-hidden rounded-2xl border transition-all duration-500 flex flex-col justify-between p-5 md:p-6 select-none ${
         isActive 
           ? "border-white/25 bg-white/[0.07] shadow-[0_20px_40px_rgba(0,0,0,0.5)]" 
           : "border-white/12 bg-white/[0.03]"
@@ -88,14 +88,6 @@ function ServiceCard({
         <p className="text-xs text-shaz-white/50 font-light leading-relaxed">
           {description}
         </p>
-      </div>
-
-      {/* Decorative arrow element */}
-      <div className={`relative z-10 flex items-center text-[10px] font-semibold transition-colors duration-300 gap-1 mt-6 ${
-        isActive ? "text-shaz-white/80" : "text-shaz-white/30"
-      }`}>
-        <span>Explore details</span>
-        <span>→</span>
       </div>
     </div>
   );
@@ -176,19 +168,65 @@ export default function Services() {
   ];
 
   const [activeIndex, setActiveIndex] = useState(0);
-  const [cardWidth, setCardWidth] = useState(310);
+  const [cardWidth, setCardWidth] = useState(280);
   const [windowWidth, setWindowWidth] = useState(1200);
+
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const lastScrollTime = useRef(0);
+
+  // Wheel scroll handler to slide carousel on mouse scroll / trackpad swipe
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+
+    const handleWheelEvent = (e: WheelEvent) => {
+      const now = Date.now();
+      const threshold = 10;
+      const absX = Math.abs(e.deltaX);
+      const absY = Math.abs(e.deltaY);
+
+      if (absX > threshold || absY > threshold) {
+        if (absX > absY) {
+          // Horizontal scroll: prevent page navigation (back/forward history swipe gestures)
+          e.preventDefault();
+          if (now - lastScrollTime.current > 400) {
+            if (e.deltaX > 0) {
+              setActiveIndex((prev) => prev + 1);
+            } else {
+              setActiveIndex((prev) => prev - 1);
+            }
+            lastScrollTime.current = now;
+          }
+        } else {
+          // Vertical scroll: do not preventDefault to avoid scroll trapping, but slide the carousel.
+          if (now - lastScrollTime.current > 500) {
+            if (e.deltaY > 0) {
+              setActiveIndex((prev) => prev + 1);
+            } else {
+              setActiveIndex((prev) => prev - 1);
+            }
+            lastScrollTime.current = now;
+          }
+        }
+      }
+    };
+
+    el.addEventListener("wheel", handleWheelEvent, { passive: false });
+    return () => {
+      el.removeEventListener("wheel", handleWheelEvent);
+    };
+  }, []);
 
   // Track responsive screen size updates
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
       if (window.innerWidth < 640) {
-        setCardWidth(230);
+        setCardWidth(200);
       } else if (window.innerWidth < 1024) {
-        setCardWidth(270);
+        setCardWidth(240);
       } else {
-        setCardWidth(310);
+        setCardWidth(280);
       }
     };
     handleResize();
@@ -290,7 +328,7 @@ export default function Services() {
         </div>
 
         {/* 3D Flat Carousel Scene */}
-        <div className="relative w-full h-[460px] flex items-center justify-center overflow-visible mt-6">
+        <div className="relative w-full h-[300px] flex items-center justify-center overflow-visible mt-6">
           
           {/* Left/Right Floating Navigation */}
           <div className="absolute left-0 lg:-left-6 top-1/2 -translate-y-1/2 z-30">
@@ -318,6 +356,7 @@ export default function Services() {
             
             {/* Flat Linear Carousel container */}
             <motion.div
+              ref={carouselRef}
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.15}
@@ -346,7 +385,7 @@ export default function Services() {
                     className="absolute"
                     style={{
                       width: `${cardWidth}px`,
-                      height: "360px",
+                      height: "220px",
                     }}
                     animate={{
                       x: x,
