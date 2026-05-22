@@ -145,31 +145,45 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Premium CSS Vector Map Placeholder */}
-            <div className="w-full h-56 rounded-3xl border border-white/5 bg-gradient-to-b from-white/5 to-shaz-black relative overflow-hidden flex flex-col justify-end p-6">
-              {/* Map grid coordinate overlays */}
-              <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:24px_24px]" />
+            {/* Embedded Google Maps in Dark Mode & Clickable Link */}
+            <a
+              href="https://maps.app.goo.gl/tAwNYqRSGTei6x7u7"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full h-56 rounded-3xl border border-white/5 bg-shaz-black relative overflow-hidden group block cursor-pointer interactive"
+            >
+              {/* Overlay to intercept internal map actions and make the entire card clickable */}
+              <div className="absolute inset-0 z-20 bg-transparent" />
               
-              {/* Abstract topographic vectors */}
-              <div className="absolute top-1/2 left-1/3 w-32 h-32 rounded-full border border-white/5 flex items-center justify-center">
-                <div className="w-24 h-24 rounded-full border border-dashed border-white/5 flex items-center justify-center" />
-              </div>
+              {/* Dark mode filter applied to the iframe */}
+              <iframe
+                src="https://maps.google.com/maps?q=13.106731,80.21109&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style={{
+                  border: 0,
+                  filter: "invert(90%) hue-rotate(180deg) grayscale(80%) contrast(120%) brightness(90%)",
+                }}
+                allowFullScreen={false}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="absolute inset-0 w-full h-full pointer-events-none z-10 opacity-70 group-hover:opacity-85 transition-opacity duration-500"
+              />
 
-              {/* Pulsing Target Location Dot */}
-              <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                <div className="w-12 h-12 rounded-full bg-shaz-gold/15 absolute animate-ping [animation-duration:2.5s]" />
-                <div className="w-6 h-6 rounded-full bg-shaz-gold/30 absolute animate-pulse" />
-                <div className="w-2 h-2 rounded-full bg-shaz-gold z-10 shadow-[0_0_8px_#FFD54A]" />
-              </div>
-
-              <div className="relative z-10 flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-shaz-gold" />
-                <div className="flex flex-col">
-                  <span className="text-[9px] font-mono text-white/40 uppercase leading-none">SHAZ Headquarters</span>
-                  <span className="text-xs text-white/70 font-semibold mt-1">Chennai, India // Coordinates Active</span>
+              {/* Grid Overlay for matching design aesthetic */}
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none z-15" />
+              
+              {/* Bottom Label Overlay */}
+              <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-shaz-black via-shaz-black/80 to-transparent p-6 z-25 pointer-events-none">
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-shaz-gold" />
+                  <div className="flex flex-col">
+                    <span className="text-[9px] font-mono text-white/40 uppercase leading-none">SHAZ Headquarters</span>
+                    <span className="text-xs text-white/70 font-semibold mt-1">Chennai, India // Coordinates Active</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </a>
           </div>
 
           {/* Right Column: Luxury Form */}
