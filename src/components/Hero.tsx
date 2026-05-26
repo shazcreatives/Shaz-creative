@@ -34,7 +34,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden bg-shaz-black px-6 md:px-12 pt-20">
+    <section className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden bg-shaz-black px-6 md:px-12 pt-20 pb-28">
       {/* Background Mesh Glows */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         {/* Central glowing blur panel behind logo */}
@@ -163,7 +163,7 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5, duration: 1 }}
-        className="relative z-10 bottom-8"
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
       >
         <button
           onClick={handleScrollDown}
