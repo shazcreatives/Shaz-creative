@@ -4,10 +4,13 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,7 +22,6 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Services", href: "#services" },
-    { name: "Showcase", href: "#showcase" },
     { name: "Portfolio", href: "#portfolio" },
     { name: "Pricing", href: "#pricing" },
     { name: "About", href: "#about" },
@@ -39,6 +41,16 @@ export default function Navbar() {
     e.preventDefault();
     setIsOpen(false);
     
+    if (href.startsWith("/")) {
+      router.push(href);
+      return;
+    }
+
+    if (pathname !== "/") {
+      router.push("/" + href);
+      return;
+    }
+
     const targetElement = document.querySelector(href);
     if (targetElement) {
       targetElement.scrollIntoView({ behavior: "smooth" });

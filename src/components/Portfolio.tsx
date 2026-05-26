@@ -1,224 +1,118 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Sparkles, Heart, Eye, ArrowUpRight } from "lucide-react";
+import { Search, Film, ArrowUpRight, X } from "lucide-react";
+import archiveData from "@/lib/creative_archives_data.json";
 
-interface PortfolioItem {
-  id: number;
+interface ArchiveItem {
+  id: string;
+  name: string;
   category: string;
-  projectName: string;
-  tagline: string;
-  metric: string;
-  metricLabel: string;
-  accentClass: string;
-  renderVisual: () => React.ReactNode;
+  mimeType: string;
+}
+
+interface RawArchiveItem {
+  id: string;
+  name: string;
+  mimeType: string;
 }
 
 export default function Portfolio() {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Creative Archives states
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [visibleCount, setVisibleCount] = useState(12);
 
-  const portfolioItems: PortfolioItem[] = [
-    {
-      id: 1,
-      category: "Restaurants",
-      projectName: "L'Aura Bistro",
-      tagline: "Rebranding a Michelin-star dining brand.",
-      metric: "+140%",
-      metricLabel: "Table Bookings Growth",
-      accentClass: "from-amber-650 to-amber-900",
-      renderVisual: () => (
-        <div className="w-full h-full relative flex flex-col justify-between p-6 bg-gradient-to-br from-amber-950/20 to-shaz-black border border-white/5 rounded-3xl overflow-hidden group">
-          <div className="absolute inset-0 bg-radial-glow-gold opacity-10 group-hover:scale-110 transition-transform duration-700" />
-          
-          {/* Mock Elegant Menu Typography */}
-          <div className="flex justify-between items-start z-10">
-            <span className="text-[10px] font-mono text-amber-500/60 uppercase">RESTAURANTS // CAS EST. 2025</span>
-            <Heart className="w-4 h-4 text-amber-500/60 group-hover:text-amber-500 group-hover:scale-110 transition-all duration-350" />
-          </div>
+  // Flatten the multi-level drive database
+  const allArchiveItems = useMemo(() => {
+    const items: ArchiveItem[] = [];
+    
+    // Add portfolio shoots (root folder files)
+    if (archiveData.portfolio_shoots) {
+      (archiveData.portfolio_shoots as RawArchiveItem[]).forEach((item) => {
+        items.push({
+          id: item.id,
+          name: item.name,
+          category: "Portfolio Shoots",
+          mimeType: item.mimeType
+        });
+      });
+    }
+    
+    // Add subfolders
+    if (archiveData.categories) {
+      Object.entries(archiveData.categories as Record<string, RawArchiveItem[]>).forEach(([categoryName, categoryItems]) => {
+        categoryItems.forEach((item) => {
+          items.push({
+            id: item.id,
+            name: item.name,
+            category: categoryName,
+            mimeType: item.mimeType
+          });
+        });
+      });
+    }
+    
+    return items;
+  }, []);
 
-          <div className="my-auto flex flex-col items-center justify-center text-center z-10">
-            <span className="font-serif italic text-2xl md:text-3xl text-amber-200 tracking-wide">L&apos;Aura</span>
-            <span className="text-[8px] tracking-[0.4em] font-light text-white/50 uppercase mt-1">BISTRO DE LUXE</span>
-            
-            {/* Minimalist plate outline */}
-            <div className="w-20 h-20 rounded-full border border-white/5 mt-4 flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full border border-dashed border-amber-500/20 flex items-center justify-center">
-                <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-              </div>
-            </div>
-          </div>
+  // Compute category list dynamically
+  const categories = useMemo(() => {
+    const list = ["All"];
+    if (archiveData.portfolio_shoots && archiveData.portfolio_shoots.length > 0) {
+      list.push("Portfolio Shoots");
+    }
+    if (archiveData.categories) {
+      Object.keys(archiveData.categories).forEach((cat) => {
+        list.push(cat);
+      });
+    }
+    return list;
+  }, []);
 
-          <div className="flex justify-between items-end z-10">
-            <div className="flex flex-col">
-              <span className="text-[8px] text-white/30 uppercase font-mono">Deliverables</span>
-              <span className="text-xs text-white/70">Menu styling & SMM strategy</span>
-            </div>
-            <div className="text-[10px] text-amber-200 font-mono">BISTRO_KIT.ZIP</div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: 2,
-      category: "Fashion",
-      projectName: "Studio MÆR",
-      tagline: "Autumn apparel digital showcase campaign.",
-      metric: "+8.5M",
-      metricLabel: "Campaign Impressions",
-      accentClass: "from-zinc-700 to-zinc-950",
-      renderVisual: () => (
-        <div className="w-full h-full relative flex flex-col justify-between p-6 bg-gradient-to-br from-zinc-900/30 to-shaz-black border border-white/5 rounded-3xl overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-transparent opacity-30 pointer-events-none" />
-
-          <div className="flex justify-between items-start z-10">
-            <span className="text-[10px] font-mono text-white/40 uppercase">APPAREL // AUTUMN COLLECTION</span>
-            <Eye className="w-4 h-4 text-white/40 group-hover:text-white group-hover:scale-110 transition-all duration-350" />
-          </div>
-
-          <div className="my-auto flex flex-col items-center justify-center text-center z-10">
-            <span className="text-3xl font-black font-display tracking-tight text-white">MÆR</span>
-            <span className="text-[9px] tracking-[0.3em] font-light text-white/55 uppercase mt-1">Ready To Wear</span>
-            
-            {/* Minimalist luxury tags */}
-            <div className="flex gap-2 mt-4 text-[7px] font-mono">
-              <span className="border border-white/10 px-2 py-0.5 rounded text-white/40">COLOR: NOIR</span>
-              <span className="border border-white/10 px-2 py-0.5 rounded text-white/40">SIZE: OS</span>
-            </div>
-          </div>
-
-          <div className="flex justify-between items-end z-10">
-            <div className="flex flex-col">
-              <span className="text-[8px] text-white/30 uppercase font-mono">Directing</span>
-              <span className="text-xs text-white/70">Concept shoot & editorial video</span>
-            </div>
-            <div className="text-[10px] text-white/50 font-mono">MAER_CO.MOV</div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: 3,
-      category: "Real Estate",
-      projectName: "The Lumina",
-      tagline: "3D visual positioning & architectural branding.",
-      metric: "95%",
-      metricLabel: "Pre-Leased Rate",
-      accentClass: "from-blue-900 to-indigo-950",
-      renderVisual: () => (
-        <div className="w-full h-full relative flex flex-col justify-between p-6 bg-gradient-to-br from-blue-950/20 to-shaz-black border border-white/5 rounded-3xl overflow-hidden group">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.1)_0%,rgba(0,0,0,0)_60%)]" />
-
-          <div className="flex justify-between items-start z-10">
-            <span className="text-[10px] font-mono text-blue-450/70 uppercase">ARCHITECTURE // DIGITAL MAPPING</span>
-            <Sparkles className="w-4 h-4 text-blue-450/60 group-hover:scale-110 transition-transform" />
-          </div>
-
-          <div className="my-auto flex flex-col items-center justify-center z-10">
-            {/* Abstract architectural grid */}
-            <div className="relative w-28 h-20 border border-white/10 flex items-center justify-center rounded-lg">
-              <div className="absolute inset-2 border border-dashed border-blue-500/25" />
-              <span className="text-[9px] font-mono text-blue-450 tracking-wider">LUMINA HEIGHTS</span>
-            </div>
-            <span className="text-xs font-mono text-white/30 mt-3">COORDINATES // 40.7128° N, 74.0060° W</span>
-          </div>
-
-          <div className="flex justify-between items-end z-10">
-            <div className="flex flex-col">
-              <span className="text-[8px] text-white/30 uppercase font-mono">Scope</span>
-              <span className="text-xs text-white/70">3D Positioning & Landing Funnel</span>
-            </div>
-            <div className="text-[10px] text-blue-450 font-mono">T-L_ARCH.CAD</div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: 4,
-      category: "Influencers",
-      projectName: "Vibe Media Co",
-      tagline: "Content funnel scaling & branding takeover.",
-      metric: "+12M",
-      metricLabel: "YouTube Views Generated",
-      accentClass: "from-pink-850 to-purple-950",
-      renderVisual: () => (
-        <div className="w-full h-full relative flex flex-col justify-between p-6 bg-gradient-to-br from-pink-950/20 to-shaz-black border border-white/5 rounded-3xl overflow-hidden group">
-          <div className="absolute inset-0 bg-radial-glow-magenta opacity-10" />
-
-          <div className="flex justify-between items-start z-10">
-            <span className="text-[10px] font-mono text-pink-500/70 uppercase">INFLUENCER SCALING // MULTI-PLATFORM</span>
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-          </div>
-
-          <div className="my-auto flex flex-col items-center justify-center text-center z-10">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-r from-shaz-purple via-shaz-magenta to-shaz-gold p-0.5 mb-2 shadow-lg">
-              <div className="w-full h-full bg-shaz-black rounded-full flex items-center justify-center text-[10px] font-bold text-white">VMC</div>
-            </div>
-            <span className="text-xl font-bold tracking-tight text-white">Vibe Media Co.</span>
-            <span className="text-[8px] font-mono text-shaz-magenta mt-1 uppercase tracking-widest">Growth Phase B</span>
-          </div>
-
-          <div className="flex justify-between items-end z-10">
-            <div className="flex flex-col">
-              <span className="text-[8px] text-white/30 uppercase font-mono">Scope</span>
-              <span className="text-xs text-white/70">Short-form editing & hook funnel</span>
-            </div>
-            <div className="text-[10px] text-pink-500 font-mono">GROWTH_REPORT.PDF</div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: 5,
-      category: "Product Photography",
-      projectName: "Elysian Skincare",
-      tagline: "Cinematic commercial packaging and item shoot.",
-      metric: "+75%",
-      metricLabel: "E-Commerce Conversion",
-      accentClass: "from-emerald-900 to-teal-950",
-      renderVisual: () => (
-        <div className="w-full h-full relative flex flex-col justify-between p-6 bg-gradient-to-br from-emerald-950/20 to-shaz-black border border-white/5 rounded-3xl overflow-hidden group">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.1)_0%,rgba(0,0,0,0)_60%)]" />
-
-          <div className="flex justify-between items-start z-10">
-            <span className="text-[10px] font-mono text-emerald-500/70 uppercase">COMMERCIAL // HIGH-SPEED SHOOT</span>
-            <span className="text-[9px] font-mono text-emerald-450">F1.4 ACTIVE</span>
-          </div>
-
-          <div className="my-auto flex flex-col items-center justify-center text-center z-10">
-            <span className="text-2xl font-bold tracking-[0.2em] text-emerald-100 font-serif uppercase">ELYSIAN</span>
-            <span className="text-[7px] tracking-[0.3em] font-light text-white/40 uppercase mt-0.5">Organics & Skincare</span>
-            
-            <div className="w-12 h-1 bg-gradient-to-r from-emerald-500/20 to-emerald-500/60 rounded-full mt-4" />
-          </div>
-
-          <div className="flex justify-between items-end z-10">
-            <div className="flex flex-col">
-              <span className="text-[8px] text-white/30 uppercase font-mono">Scope</span>
-              <span className="text-xs text-white/70">4K Macro photos & lighting set</span>
-            </div>
-            <div className="text-[10px] text-emerald-400 font-mono">ELYSIAN_RAW.DNG</div>
-          </div>
-        </div>
-      ),
-    },
-  ];
-
-  const handleScroll = (direction: "left" | "right") => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const scrollAmount = 380; // card width + gaps
-    const targetScroll = 
-      direction === "left" 
-        ? container.scrollLeft - scrollAmount 
-        : container.scrollLeft + scrollAmount;
-
-    container.scrollTo({
-      left: targetScroll,
-      behavior: "smooth",
+  // Compute items count per category
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {
+      All: allArchiveItems.length
+    };
+    allArchiveItems.forEach((item) => {
+      counts[item.category] = (counts[item.category] || 0) + 1;
     });
+    return counts;
+  }, [allArchiveItems]);
+
+  // Clean video name for premium aesthetic display
+  const cleanVideoName = (name: string) => {
+    let cleaned = name.replace(/\.(mp4|mov|m4a|avi|mkv)$/i, "");
+    cleaned = cleaned.replace(/[-_]/g, " ").replace(/\s+/g, " ").trim();
+    
+    return cleaned
+      .split(" ")
+      .map((word) => {
+        const upper = word.toUpperCase();
+        if (["AI", "SMK", "DARLING", "SMM", "SEO"].includes(upper)) {
+          return upper;
+        }
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      })
+      .join(" ");
   };
+
+  // Filter items based on active tab and search query
+  const filteredItems = useMemo(() => {
+    return allArchiveItems.filter((item) => {
+      const matchesCategory = activeCategory === "All" || item.category === activeCategory;
+      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [allArchiveItems, activeCategory, searchQuery]);
+
+  // Slice list for pagination (Load More)
+  const displayedItems = useMemo(() => {
+    return filteredItems.slice(0, visibleCount);
+  }, [filteredItems, visibleCount]);
 
   return (
     <section id="portfolio" className="relative py-24 md:py-32 bg-shaz-black overflow-hidden z-10">
@@ -228,90 +122,165 @@ export default function Portfolio() {
 
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         
-        {/* Section Header Controls */}
+        {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 md:mb-20 gap-8">
           <div className="max-w-xl flex flex-col text-left">
             <span className="text-xs font-semibold tracking-[0.3em] font-mono text-shaz-white/40 uppercase mb-3">
-              CREATIVE ARCHIVES
+              PORTFOLIO
             </span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-shaz-white mb-6">
               Selected Showcase.{" "}
-              <span className="text-gradient-purple-magenta">High-Status Projects.</span>
+              <span className="text-gradient-purple-magenta">Production Vault.</span>
             </h2>
             <p className="text-shaz-white/60 font-light text-base md:text-lg leading-relaxed">
-              Explore key visual campaigns across restaurants, fashion houses, real estate projects, and influencers.
+              Explore our library of video productions, brand shoots, social media reels, and AI creatives. Select a category or search below.
             </p>
           </div>
-
-          {/* Desktop Navigation buttons */}
-          <div className="hidden md:flex items-center gap-3">
-            <button
-              onClick={() => handleScroll("left")}
-              className="w-12 h-12 rounded-full bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 text-white flex items-center justify-center transition-all duration-300 interactive"
-              aria-label="Scroll left"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => handleScroll("right")}
-              className="w-12 h-12 rounded-full bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 text-white flex items-center justify-center transition-all duration-300 interactive"
-              aria-label="Scroll right"
-            >
-              <ArrowRight className="w-5 h-5" />
-            </button>
+          
+          {/* Stats Badges */}
+          <div className="flex flex-wrap gap-3 font-mono text-xs">
+            <div className="bg-white/5 border border-white/5 px-4 py-2 rounded-2xl flex flex-col">
+              <span className="text-shaz-gold font-bold text-base leading-none">140+</span>
+              <span className="text-[8px] text-white/40 uppercase mt-1">Total Assets</span>
+            </div>
+            <div className="bg-white/5 border border-white/5 px-4 py-2 rounded-2xl flex flex-col">
+              <span className="text-shaz-magenta font-bold text-base leading-none">8</span>
+              <span className="text-[8px] text-white/40 uppercase mt-1">Categories</span>
+            </div>
+            <div className="bg-white/5 border border-white/5 px-4 py-2 rounded-2xl flex flex-col">
+              <span className="text-white font-bold text-base leading-none">4K</span>
+              <span className="text-[8px] text-white/40 uppercase mt-1">Resolution</span>
+            </div>
           </div>
         </div>
 
-        {/* Apple-style horizontal scroll snap track */}
-        <div
-          ref={scrollContainerRef}
-          className="flex gap-6 overflow-x-scroll snap-x snap-mandatory pb-8 scrollbar-none select-none scroll-smooth touch-pan-x cursor-grab active:cursor-grabbing"
-        >
-          {portfolioItems.map((item) => (
-            <motion.div
-              key={item.id}
-              className="w-[280px] sm:w-[340px] md:w-[380px] shrink-0 snap-start flex flex-col gap-5 group"
-            >
-              {/* Image visual wrapper */}
-              <div className="aspect-[3/4] w-full relative rounded-3xl overflow-hidden transition-transform duration-500 group-hover:scale-[1.02]">
-                {item.renderVisual()}
-              </div>
+        {/* Search and Filters bar */}
+        <div className="flex flex-col gap-6 mb-10">
+          {/* Search bar */}
+          <div className="relative w-full max-w-md">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+            <input
+              type="text"
+              placeholder="Search project name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-full py-3 pl-11 pr-5 text-sm text-white focus:outline-none focus:border-shaz-purple/60 focus:ring-1 focus:ring-shaz-purple/30 transition-all placeholder:text-white/30 animate-fade-in"
+            />
+            {searchQuery && (
+              <button 
+                onClick={() => setSearchQuery("")} 
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
 
-              {/* Detail block */}
-              <div className="px-2 flex flex-col gap-1.5 text-left">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono text-shaz-magenta tracking-wider uppercase font-bold">
-                    {item.category}
+          {/* Category Chips/Pills */}
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+            {categories.map((cat) => {
+              const count = categoryCounts[cat] || 0;
+              const isActive = activeCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    setActiveCategory(cat);
+                    setVisibleCount(12);
+                  }}
+                  className={`px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 flex items-center gap-1.5 interactive ${
+                    isActive
+                      ? "bg-gradient-to-r from-shaz-purple to-shaz-magenta text-white shadow-lg shadow-shaz-purple/20"
+                      : "bg-white/5 border border-white/5 hover:border-white/10 hover:bg-white/10 text-white/70 hover:text-white"
+                  }`}
+                >
+                  {cat === "All" && <Film className="w-3.5 h-3.5" />}
+                  {cat}
+                  <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-mono ${
+                    isActive ? "bg-white/20 text-white" : "bg-white/10 text-white/50"
+                  }`}>
+                    {count}
                   </span>
-                  <span className="w-1 h-1 rounded-full bg-white/25" />
-                  <span className="text-[10px] font-mono text-white/40">PROJECT_N°0{item.id}</span>
-                </div>
-
-                <div className="flex justify-between items-start">
-                  <h3 className="text-xl font-bold text-white group-hover:text-gradient-purple-magenta transition-all flex items-center gap-1">
-                    {item.projectName}
-                    <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity translate-x-[-4px] group-hover:translate-x-0 duration-300" />
-                  </h3>
-                  
-                  {/* Dynamic metric bubble */}
-                  <div className="text-right">
-                    <span className="block text-sm font-bold text-shaz-gold font-mono tracking-tight leading-none">
-                      {item.metric}
-                    </span>
-                    <span className="text-[7px] text-white/40 uppercase font-mono tracking-wider">
-                      {item.metricLabel}
-                    </span>
-                  </div>
-                </div>
-
-                <p className="text-xs text-white/50 font-light leading-relaxed">
-                  {item.tagline}
-                </p>
-              </div>
-            </motion.div>
-          ))}
+                </button>
+              );
+            })}
+          </div>
         </div>
+
+        {/* Video Grid */}
+        {filteredItems.length === 0 ? (
+          <div className="py-16 text-center border border-dashed border-white/5 rounded-3xl bg-white/[0.01]">
+            <Film className="w-12 h-12 text-white/20 mx-auto mb-4" />
+            <p className="text-white/40 font-light">No videos found matching your criteria.</p>
+            <button 
+              onClick={() => { setSearchQuery(""); setActiveCategory("All"); }}
+              className="mt-4 text-xs font-semibold text-shaz-magenta hover:underline"
+            >
+              Reset Search & Filters
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 animate-fade-in">
+              {displayedItems.map((item, index) => {
+                const cleanedName = cleanVideoName(item.name);
+                return (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: Math.min(index * 0.05, 0.4) }}
+                    onClick={() => window.open(`https://drive.google.com/file/d/${item.id}/view?usp=drivesdk`, "_blank")}
+                    className="relative aspect-video rounded-2xl overflow-hidden bg-shaz-darkGray border border-white/5 hover:border-white/15 group cursor-pointer shadow-lg hover:shadow-shaz-purple/5 transition-all duration-500"
+                  >
+                    {/* Google Drive Thumbnail cover with overlay */}
+                    <div className="w-full h-full relative overflow-hidden">
+                      <img
+                        src={`https://drive.google.com/thumbnail?sz=w600&id=${item.id}`}
+                        alt={item.name}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                      {/* Dark overlay */}
+                      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors duration-500" />
+                      
+                      {/* Play Button Overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300">
+                          <ArrowUpRight className="w-5 h-5 text-white" />
+                        </div>
+                      </div>
+
+                      {/* Bottom title text overlay */}
+                      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end text-left">
+                        <span className="text-[9px] font-mono text-shaz-magenta uppercase font-bold tracking-wider mb-1">
+                          {item.category}
+                        </span>
+                        <h4 className="text-sm font-bold text-white leading-snug group-hover:text-gradient-purple-magenta transition-all line-clamp-1">
+                          {cleanedName}
+                        </h4>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* Pagination Controls */}
+            {filteredItems.length > visibleCount && (
+              <div className="mt-12 flex justify-center">
+                <button
+                  onClick={() => setVisibleCount((prev) => prev + 12)}
+                  className="px-8 py-3.5 rounded-full text-xs font-bold text-white bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all duration-300 shadow-lg interactive"
+                >
+                  Load More Projects (+{filteredItems.length - visibleCount})
+                </button>
+              </div>
+            )}
+          </>
+        )}
       </div>
+
     </section>
   );
 }

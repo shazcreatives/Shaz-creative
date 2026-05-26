@@ -6,7 +6,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
-import Showcase from "@/components/Showcase";
+// import Showcase from "@/components/Showcase";
 import Pricing from "@/components/Pricing";
 import Portfolio from "@/components/Portfolio";
 import Testimonials from "@/components/Testimonials";
@@ -31,7 +31,7 @@ export default function Home() {
           <main className="flex-grow">
             <Hero />
             <Services />
-            <Showcase />
+            {/* <Showcase /> */}
             <Portfolio />
             <Pricing />
             <Testimonials />
