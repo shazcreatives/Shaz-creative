@@ -34,8 +34,6 @@ const categoryFolderIds: Record<string, string> = {
   "Perfumes": "1Qm_2xuueJ4_l3LxHrAIKo0tKNwHBFnFd",
   "Sports": "16DpnABDFqvyFcz6XvO712iJN0TXwHDpe",
   "Tech": "1a_KCm3sMx0qJNDy0Df1nW8QSLep2ByUy",
-  "Meta Ads": "1qx24p8srT1My2J0lTdS3NwEr1-WaEI9I",
-  "Google Ads": "1qx24p8srT1My2J0lTdS3NwEr1-WaEI9I",
   "All": "1qx24p8srT1My2J0lTdS3NwEr1-WaEI9I"
 };
 
@@ -162,8 +160,6 @@ export default function Portfolio() {
         list.push(cat);
       });
     }
-    list.push("Meta Ads");
-    list.push("Google Ads");
     list.push("All");
     return list;
   }, []);
@@ -276,12 +272,10 @@ export default function Portfolio() {
             style={{ WebkitOverflowScrolling: "touch" }}
           >
             {categories.map((cat) => {
-              const count = cat === "Meta Ads" ? 14 : cat === "Google Ads" ? 9 : categoryCounts[cat] || 0;
+              const count = categoryCounts[cat] || 0;
               const items = cat === "All"
                 ? allArchiveItems
-                : (cat === "Meta Ads" || cat === "Google Ads")
-                  ? allArchiveItems.slice(0, 3)
-                  : itemsByCategory[cat] || [];
+                : itemsByCategory[cat] || [];
               
               return (
                 <div key={cat} className="snap-start shrink-0">

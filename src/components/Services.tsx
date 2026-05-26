@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { 
   Share2, Palette, Video, Film, Sparkles, 
   Camera, TrendingUp, Clapperboard, Megaphone, Laptop,
-  ArrowLeft, ArrowRight
+  ArrowLeft, ArrowRight, Target, Globe
 } from "lucide-react";
 
 // Glow Card component with mouse tracking spot-light
@@ -15,7 +15,8 @@ function ServiceCard({
   icon: Icon, 
   colorClass,
   label,
-  isActive
+  isActive,
+  driveUrl
 }: { 
   title: string; 
   description: string; 
@@ -23,6 +24,7 @@ function ServiceCard({
   colorClass: string;
   label: string;
   isActive: boolean;
+  driveUrl?: string;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [coords, setCoords] = useState({ x: 0, y: 0 });
@@ -89,6 +91,18 @@ function ServiceCard({
           {description}
         </p>
       </div>
+
+      {driveUrl && isActive && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            window.open(driveUrl, "_blank", "noopener,noreferrer");
+          }}
+          className="relative z-20 mt-3 inline-flex items-center gap-1.5 self-start px-3 py-1.5 text-[9px] font-mono font-bold tracking-wider text-shaz-magenta border border-shaz-magenta/30 bg-shaz-magenta/5 hover:bg-shaz-magenta/15 hover:border-shaz-magenta/50 rounded-xl transition-all duration-300 pointer-events-auto shadow-md shadow-black/10 animate-fade-in"
+        >
+          <span>VIEW DRIVE ASSETS &rarr;</span>
+        </button>
+      )}
     </div>
   );
 }
@@ -152,21 +166,38 @@ export default function Services() {
       label: "[ 08 // CONTENT ]",
     },
     {
+      title: "Meta Ads",
+      description: "High-converting campaign setups on Facebook and Instagram. Targeted funnels, copy hooks, and pixel setups.",
+      icon: Target,
+      colorClass: "text-shaz-purple group-hover:shadow-[0_0_15px_rgba(138,43,226,0.5)]",
+      label: "[ 09 // META ]",
+      driveUrl: "https://drive.google.com/drive/folders/1qx24p8srT1My2J0lTdS3NwEr1-WaEI9I"
+    },
+    {
+      title: "Google Ads",
+      description: "Search, display, and YouTube ad campaigns designed to capture active buyer intent and maximize ROI.",
+      icon: Globe,
+      colorClass: "text-shaz-magenta group-hover:shadow-[0_0_15px_rgba(217,70,239,0.5)]",
+      label: "[ 10 // GOOGLE ]",
+      driveUrl: "https://drive.google.com/drive/folders/1qx24p8srT1My2J0lTdS3NwEr1-WaEI9I"
+    },
+    {
       title: "Ads & Marketing",
       description: "Data-driven targeting strategy. Meta, Google, and Youtube ads managed with premium lead magnets.",
       icon: Megaphone,
-      colorClass: "text-shaz-purple group-hover:shadow-[0_0_15px_rgba(138,43,226,0.5)]",
-      label: "[ 09 // MARKETING ]",
+      colorClass: "text-shaz-orange group-hover:shadow-[0_0_15px_rgba(245,158,11,0.5)]",
+      label: "[ 11 // MARKETING ]",
     },
     {
       title: "Website Design",
       description: "Luxury websites built with framer layouts, optimized Next.js frameworks, and blazing-fast SEO.",
       icon: Laptop,
-      colorClass: "text-shaz-magenta group-hover:shadow-[0_0_15px_rgba(217,70,239,0.5)]",
-      label: "[ 10 // DIGITAL ]",
+      colorClass: "text-shaz-gold group-hover:shadow-[0_0_15px_rgba(255,213,74,0.5)]",
+      label: "[ 12 // DIGITAL ]",
     },
   ];
 
+  const N = services.length;
   const [activeIndex, setActiveIndex] = useState(0);
   const [cardWidth, setCardWidth] = useState(280);
   const [windowWidth, setWindowWidth] = useState(1200);
@@ -244,7 +275,7 @@ export default function Services() {
     return () => clearInterval(timer);
   }, [activeIndex]);
 
-  const normalizedIndex = ((activeIndex % 10) + 10) % 10;
+  const normalizedIndex = ((activeIndex % N) + N) % N;
   const isMobile = windowWidth < 640;
 
   // Calculates x, scale, opacity, blur, and zIndex for a flat, linear scale carousel
@@ -373,8 +404,9 @@ export default function Services() {
               {services.map((service, i) => {
                 // Calculate shortest distance in a circular buffer
                 let idxDiff = i - normalizedIndex;
-                if (idxDiff > 5) idxDiff -= 10;
-                if (idxDiff < -5) idxDiff += 10;
+                const halfN = N / 2;
+                if (idxDiff > halfN) idxDiff -= N;
+                if (idxDiff < -halfN) idxDiff += N;
 
                 const { x, scale, opacity, blur, zIndex } = getCardTransforms(idxDiff);
                 const isActive = i === normalizedIndex;
@@ -385,7 +417,7 @@ export default function Services() {
                     className="absolute"
                     style={{
                       width: `${cardWidth}px`,
-                      height: isMobile ? "260px" : "220px",
+                      height: isMobile ? "280px" : "240px",
                     }}
                     animate={{
                       x: x,
@@ -412,6 +444,7 @@ export default function Services() {
                         colorClass={service.colorClass}
                         label={service.label}
                         isActive={isActive}
+                        driveUrl={service.driveUrl}
                       />
                     </div>
                   </motion.div>
@@ -424,27 +457,30 @@ export default function Services() {
 
         {/* Indicators at the bottom */}
         <div className="flex justify-center gap-2.5 mt-8 z-20">
-          {services.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => {
-                const cycles = Math.floor(activeIndex / 10);
-                let targetIdx = cycles * 10 + idx;
-                
-                // Optimize rotation direction
-                if (targetIdx - activeIndex > 5) targetIdx -= 10;
-                else if (targetIdx - activeIndex < -5) targetIdx += 10;
-                
-                setActiveIndex(targetIdx);
-              }}
-              className={`h-1.5 rounded-full transition-all duration-500 ${
-                idx === normalizedIndex 
-                  ? "w-8 bg-gradient-to-r from-shaz-purple via-shaz-magenta to-shaz-gold shadow-[0_0_8px_rgba(217,70,239,0.5)]" 
-                  : "w-2 bg-white/10 hover:bg-white/20"
-              }`}
-              aria-label={`Go to service ${idx + 1}`}
-            />
-          ))}
+          {services.map((_, idx) => {
+            return (
+              <button
+                key={idx}
+                onClick={() => {
+                  const cycles = Math.floor(activeIndex / N);
+                  let targetIdx = cycles * N + idx;
+                  
+                  // Optimize rotation direction
+                  const halfN = N / 2;
+                  if (targetIdx - activeIndex > halfN) targetIdx -= N;
+                  else if (targetIdx - activeIndex < -halfN) targetIdx += N;
+                  
+                  setActiveIndex(targetIdx);
+                }}
+                className={`h-1.5 rounded-full transition-all duration-500 ${
+                  idx === normalizedIndex 
+                    ? "w-8 bg-gradient-to-r from-shaz-purple via-shaz-magenta to-shaz-gold shadow-[0_0_8px_rgba(217,70,239,0.5)]" 
+                    : "w-2 bg-white/10 hover:bg-white/20"
+                }`}
+                aria-label={`Go to service ${idx + 1}`}
+              />
+            );
+          })}
         </div>
 
       </div>
