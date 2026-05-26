@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useRef } from "react";
 import { motion } from "framer-motion";
-import { Search, Film, ArrowUpRight, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Folder } from "lucide-react";
 import archiveData from "@/lib/creative_archives_data.json";
 
 interface ArchiveItem {
@@ -18,14 +18,107 @@ interface RawArchiveItem {
   mimeType: string;
 }
 
-export default function Portfolio() {
-  
-  // Creative Archives states
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [visibleCount, setVisibleCount] = useState(12);
+interface FolderCardProps {
+  name: string;
+  count: number;
+  items: ArchiveItem[];
+  onClick: () => void;
+}
 
-  // Flatten the multi-level drive database
+const categoryFolderIds: Record<string, string> = {
+  "Portfolio Shoots": "1DRzwvrNAby4c3JvK9TUBN2JgrO3oowrA",
+  "AI Generated Videos": "1nWw7POi3vQZVJxBplAZfvikfmuVe2bfR",
+  "Boutique": "1Y-3Nt4uzaB-0gaV1lZ0Ojykmww1NgXBG",
+  "Cafe": "10BWJ1QVcH9cieuYouh18OSn679bx0ND1",
+  "Car": "1wxWH-wwDds2HjNJRksDZi-XVYtHMp5f3",
+  "Perfumes": "1Qm_2xuueJ4_l3LxHrAIKo0tKNwHBFnFd",
+  "Sports": "16DpnABDFqvyFcz6XvO712iJN0TXwHDpe",
+  "Tech": "1a_KCm3sMx0qJNDy0Df1nW8QSLep2ByUy",
+  "Meta Ads": "1qx24p8srT1My2J0lTdS3NwEr1-WaEI9I",
+  "Google Ads": "1qx24p8srT1My2J0lTdS3NwEr1-WaEI9I",
+  "All": "1qx24p8srT1My2J0lTdS3NwEr1-WaEI9I"
+};
+
+function FolderCard({ name, count, items, onClick }: FolderCardProps) {
+  // Take up to 3 items to show in the stack peek
+  const peekItems = items.slice(0, 3);
+
+  return (
+    <motion.div
+      onClick={onClick}
+      className="relative w-60 h-72 rounded-3xl cursor-pointer group flex flex-col justify-end border border-white/5 bg-white/[0.01] hover:border-white/15 hover:bg-white/[0.03] transition-all duration-500 overflow-visible shrink-0"
+      whileHover="hover"
+      initial="idle"
+    >
+      {/* Folder Tab Shape */}
+      <div className="absolute -top-3 left-4 h-3.5 w-24 rounded-t-xl border-t border-x border-white/5 bg-[#0f0f18] group-hover:border-white/15 group-hover:bg-white/[0.03] transition-all duration-500" />
+
+      {/* Files Sneak Peek Stack */}
+      <div className="absolute inset-x-4 top-6 h-32 flex items-center justify-center overflow-visible pointer-events-none">
+        {peekItems.map((item, idx) => {
+          const rotation = idx === 0 ? -8 : idx === 2 ? 8 : 0;
+          const xOffset = idx === 0 ? -16 : idx === 2 ? 16 : 0;
+          const yOffset = idx === 0 ? 6 : idx === 2 ? 6 : 0;
+          
+          return (
+            <motion.div
+              key={item.id}
+              className="absolute w-20 h-28 rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-shaz-darkGray origin-bottom"
+              variants={{
+                idle: {
+                  y: 16 + yOffset,
+                  rotate: rotation,
+                  x: xOffset,
+                  scale: 0.9,
+                  opacity: 0.7
+                },
+                hover: {
+                  y: -15 - (idx * 4),
+                  rotate: rotation * 1.4,
+                  x: xOffset * 1.3,
+                  scale: 1.02,
+                  opacity: 1
+                }
+              }}
+              transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            >
+              <img
+                src={`https://drive.google.com/thumbnail?sz=w200&id=${item.id}`}
+                alt={item.name}
+                className="w-full h-full object-cover"
+                loading="lazy"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Folder Front Pocket / Flap */}
+      <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-b from-[#110B24]/45 to-[#0A0A16]/95 border-t border-white/10 rounded-b-3xl z-20 backdrop-blur-md p-5 flex flex-col justify-end text-left">
+        <span className="text-[8px] font-mono text-shaz-magenta uppercase font-bold tracking-wider mb-1.5 flex items-center gap-1">
+          <Folder className="w-3.5 h-3.5 text-shaz-magenta" />
+          Category Folder
+        </span>
+        <h4 className="text-sm font-bold text-white leading-tight group-hover:text-gradient-purple-magenta transition-all line-clamp-2">
+          {name}
+        </h4>
+        <div className="text-[10px] font-mono text-white/40 mt-2 flex items-center justify-between">
+          <span>{count} Video{count !== 1 ? "s" : ""}</span>
+          <span className="text-shaz-purple font-semibold text-[8px] uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
+            Open &rarr;
+          </span>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+export default function Portfolio() {
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  // Flatten the drive database
   const allArchiveItems = useMemo(() => {
     const items: ArchiveItem[] = [];
     
@@ -58,9 +151,9 @@ export default function Portfolio() {
     return items;
   }, []);
 
-  // Compute category list dynamically
+  // Compute category list dynamically, with custom additions and "All" placed at the end
   const categories = useMemo(() => {
-    const list = ["All"];
+    const list = [];
     if (archiveData.portfolio_shoots && archiveData.portfolio_shoots.length > 0) {
       list.push("Portfolio Shoots");
     }
@@ -69,8 +162,23 @@ export default function Portfolio() {
         list.push(cat);
       });
     }
+    list.push("Meta Ads");
+    list.push("Google Ads");
+    list.push("All");
     return list;
   }, []);
+
+  // Group items by category for folders peek
+  const itemsByCategory = useMemo(() => {
+    const groups: Record<string, ArchiveItem[]> = {};
+    allArchiveItems.forEach((item) => {
+      if (!groups[item.category]) {
+        groups[item.category] = [];
+      }
+      groups[item.category].push(item);
+    });
+    return groups;
+  }, [allArchiveItems]);
 
   // Compute items count per category
   const categoryCounts = useMemo(() => {
@@ -83,36 +191,24 @@ export default function Portfolio() {
     return counts;
   }, [allArchiveItems]);
 
-  // Clean video name for premium aesthetic display
-  const cleanVideoName = (name: string) => {
-    let cleaned = name.replace(/\.(mp4|mov|m4a|avi|mkv)$/i, "");
-    cleaned = cleaned.replace(/[-_]/g, " ").replace(/\s+/g, " ").trim();
-    
-    return cleaned
-      .split(" ")
-      .map((word) => {
-        const upper = word.toUpperCase();
-        if (["AI", "SMK", "DARLING", "SMM", "SEO"].includes(upper)) {
-          return upper;
-        }
-        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-      })
-      .join(" ");
+  // Scroll Carousel
+  const scrollCarousel = (direction: "left" | "right") => {
+    if (carouselRef.current) {
+      const scrollAmount = 280;
+      carouselRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth"
+      });
+    }
   };
 
-  // Filter items based on active tab and search query
-  const filteredItems = useMemo(() => {
-    return allArchiveItems.filter((item) => {
-      const matchesCategory = activeCategory === "All" || item.category === activeCategory;
-      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
-    });
-  }, [allArchiveItems, activeCategory, searchQuery]);
-
-  // Slice list for pagination (Load More)
-  const displayedItems = useMemo(() => {
-    return filteredItems.slice(0, visibleCount);
-  }, [filteredItems, visibleCount]);
+  const handleFolderClick = (categoryName: string) => {
+    const lookupKey = categoryName === "All" ? "All" : categoryName;
+    const folderId = categoryFolderIds[lookupKey];
+    if (folderId) {
+      window.open(`https://drive.google.com/drive/folders/${folderId}`, "_blank", "noopener,noreferrer");
+    }
+  };
 
   return (
     <section id="portfolio" className="relative py-24 md:py-32 bg-shaz-black overflow-hidden z-10">
@@ -133,7 +229,7 @@ export default function Portfolio() {
               <span className="text-gradient-purple-magenta">Production Vault.</span>
             </h2>
             <p className="text-shaz-white/60 font-light text-base md:text-lg leading-relaxed">
-              Explore our library of video productions, brand shoots, social media reels, and AI creatives. Select a category or search below.
+              Explore our library of video productions, brand shoots, social media reels, and AI creatives. Click on any category folder below to open the assets directly in Google Drive.
             </p>
           </div>
           
@@ -144,8 +240,8 @@ export default function Portfolio() {
               <span className="text-[8px] text-white/40 uppercase mt-1">Total Assets</span>
             </div>
             <div className="bg-white/5 border border-white/5 px-4 py-2 rounded-2xl flex flex-col">
-              <span className="text-shaz-magenta font-bold text-base leading-none">8</span>
-              <span className="text-[8px] text-white/40 uppercase mt-1">Categories</span>
+              <span className="text-shaz-magenta font-bold text-base leading-none">{categories.length - 1}</span>
+              <span className="text-[8px] text-white/40 uppercase mt-1">Folders</span>
             </div>
             <div className="bg-white/5 border border-white/5 px-4 py-2 rounded-2xl flex flex-col">
               <span className="text-white font-bold text-base leading-none">4K</span>
@@ -154,133 +250,54 @@ export default function Portfolio() {
           </div>
         </div>
 
-        {/* Search and Filters bar */}
-        <div className="flex flex-col gap-6 mb-10">
-          {/* Search bar */}
-          <div className="relative w-full max-w-md">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
-            <input
-              type="text"
-              placeholder="Search project name..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-full py-3 pl-11 pr-5 text-sm text-white focus:outline-none focus:border-shaz-purple/60 focus:ring-1 focus:ring-shaz-purple/30 transition-all placeholder:text-white/30 animate-fade-in"
-            />
-            {searchQuery && (
-              <button 
-                onClick={() => setSearchQuery("")} 
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
-          </div>
+        {/* Carousel Controls */}
+        <div className="flex justify-end gap-3 mb-6">
+          <button
+            onClick={() => scrollCarousel("left")}
+            className="w-10 h-10 rounded-full border border-white/5 bg-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 hover:border-white/15 transition-all duration-300 interactive"
+            aria-label="Scroll left"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => scrollCarousel("right")}
+            className="w-10 h-10 rounded-full border border-white/5 bg-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 hover:border-white/15 transition-all duration-300 interactive"
+            aria-label="Scroll right"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
 
-          {/* Category Chips/Pills */}
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+        {/* Folders Carousel */}
+        <div className="relative overflow-hidden mb-8">
+          <div
+            ref={carouselRef}
+            className="flex gap-6 overflow-x-auto py-8 px-2 scrollbar-none scroll-smooth snap-x snap-mandatory"
+            style={{ WebkitOverflowScrolling: "touch" }}
+          >
             {categories.map((cat) => {
-              const count = categoryCounts[cat] || 0;
-              const isActive = activeCategory === cat;
+              const count = cat === "Meta Ads" ? 14 : cat === "Google Ads" ? 9 : categoryCounts[cat] || 0;
+              const items = cat === "All"
+                ? allArchiveItems
+                : (cat === "Meta Ads" || cat === "Google Ads")
+                  ? allArchiveItems.slice(0, 3)
+                  : itemsByCategory[cat] || [];
+              
               return (
-                <button
-                  key={cat}
-                  onClick={() => {
-                    setActiveCategory(cat);
-                    setVisibleCount(12);
-                  }}
-                  className={`px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 flex items-center gap-1.5 interactive ${
-                    isActive
-                      ? "bg-gradient-to-r from-shaz-purple to-shaz-magenta text-white shadow-lg shadow-shaz-purple/20"
-                      : "bg-white/5 border border-white/5 hover:border-white/10 hover:bg-white/10 text-white/70 hover:text-white"
-                  }`}
-                >
-                  {cat === "All" && <Film className="w-3.5 h-3.5" />}
-                  {cat}
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-mono ${
-                    isActive ? "bg-white/20 text-white" : "bg-white/10 text-white/50"
-                  }`}>
-                    {count}
-                  </span>
-                </button>
+                <div key={cat} className="snap-start shrink-0">
+                  <FolderCard
+                    name={cat === "All" ? "All Productions" : cat}
+                    count={count}
+                    items={items}
+                    onClick={() => handleFolderClick(cat)}
+                  />
+                </div>
               );
             })}
           </div>
         </div>
 
-        {/* Video Grid */}
-        {filteredItems.length === 0 ? (
-          <div className="py-16 text-center border border-dashed border-white/5 rounded-3xl bg-white/[0.01]">
-            <Film className="w-12 h-12 text-white/20 mx-auto mb-4" />
-            <p className="text-white/40 font-light">No videos found matching your criteria.</p>
-            <button 
-              onClick={() => { setSearchQuery(""); setActiveCategory("All"); }}
-              className="mt-4 text-xs font-semibold text-shaz-magenta hover:underline"
-            >
-              Reset Search & Filters
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 animate-fade-in">
-              {displayedItems.map((item, index) => {
-                const cleanedName = cleanVideoName(item.name);
-                return (
-                  <motion.div
-                    key={item.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: Math.min(index * 0.05, 0.4) }}
-                    onClick={() => window.open(`https://drive.google.com/file/d/${item.id}/view?usp=drivesdk`, "_blank")}
-                    className="relative aspect-video rounded-2xl overflow-hidden bg-shaz-darkGray border border-white/5 hover:border-white/15 group cursor-pointer shadow-lg hover:shadow-shaz-purple/5 transition-all duration-500"
-                  >
-                    {/* Google Drive Thumbnail cover with overlay */}
-                    <div className="w-full h-full relative overflow-hidden">
-                      <img
-                        src={`https://drive.google.com/thumbnail?sz=w600&id=${item.id}`}
-                        alt={item.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                      {/* Dark overlay */}
-                      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors duration-500" />
-                      
-                      {/* Play Button Overlay */}
-                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300">
-                          <ArrowUpRight className="w-5 h-5 text-white" />
-                        </div>
-                      </div>
-
-                      {/* Bottom title text overlay */}
-                      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end text-left">
-                        <span className="text-[9px] font-mono text-shaz-magenta uppercase font-bold tracking-wider mb-1">
-                          {item.category}
-                        </span>
-                        <h4 className="text-sm font-bold text-white leading-snug group-hover:text-gradient-purple-magenta transition-all line-clamp-1">
-                          {cleanedName}
-                        </h4>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-
-            {/* Pagination Controls */}
-            {filteredItems.length > visibleCount && (
-              <div className="mt-12 flex justify-center">
-                <button
-                  onClick={() => setVisibleCount((prev) => prev + 12)}
-                  className="px-8 py-3.5 rounded-full text-xs font-bold text-white bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all duration-300 shadow-lg interactive"
-                >
-                  Load More Projects (+{filteredItems.length - visibleCount})
-                </button>
-              </div>
-            )}
-          </>
-        )}
       </div>
-
     </section>
   );
 }

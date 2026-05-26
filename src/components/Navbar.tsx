@@ -24,8 +24,8 @@ export default function Navbar() {
     { name: "Services", href: "#services" },
     { name: "Portfolio", href: "#portfolio" },
     { name: "Pricing", href: "#pricing" },
-    { name: "About", href: "#about" },
     { name: "Contact", href: "#contact" },
+    { name: "About", href: "#about" },
   ];
 
   // Prevent scroll when mobile menu is open

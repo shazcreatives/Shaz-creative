@@ -15,14 +15,6 @@ type SMMCampaignPackage = {
   popular?: boolean;
 };
 
-type MonthlySMMPackage = {
-  name: string;
-  price: string;
-  tagline: string;
-  features: string[];
-  popular?: boolean;
-};
-
 type SubServicePackage = {
   levelName: string;
   price: string;
@@ -40,14 +32,15 @@ type CreativeServiceCategory = {
 };
 
 export default function Pricing() {
-  const [activeTab, setActiveTab] = useState<"campaigns" | "monthly" | "services">("campaigns");
+  const [activeTab, setActiveTab] = useState<"campaigns" | "services">("campaigns");
 
   // Sub-toggles for the creative services cards
   const [graphicsLevel, setGraphicsLevel] = useState<"starter" | "professional" | "premium">("starter");
   const [shootingLevel, setShootingLevel] = useState<"starter" | "professional" | "premium">("starter");
+  const [editingLevel, setEditingLevel] = useState<"starter" | "professional" | "premium">("starter");
   const [webLevel, setWebLevel] = useState<"starter" | "professional" | "premium">("starter");
 
-  // 1. SMM Reel Campaigns (from PDF)
+  // 1. SMM Reel Campaigns
   const smmCampaigns: SMMCampaignPackage[] = [
     {
       name: "Bronze Package",
@@ -103,54 +96,7 @@ export default function Pricing() {
     },
   ];
 
-  // 2. SMM Monthly Retainer Packages
-  const smmMonthly: MonthlySMMPackage[] = [
-    {
-      name: "Starter SMM",
-      price: "₹9,999/mo",
-      tagline: "Basic profile upkeep and scheduling.",
-      features: [
-        "Regular feed posting (3 posts/week)",
-        "Standard caption copywriting",
-        "Targeted hashtag strategy",
-        "Weekly story updates",
-        "Basic monthly analytics review",
-        "1 Platform (Instagram or Facebook)",
-      ],
-    },
-    {
-      name: "Growth SMM",
-      price: "₹19,999/mo",
-      tagline: "Active posting and engagement support.",
-      popular: true,
-      features: [
-        "Consistent feed posting (5 posts/week)",
-        "Professional caption writing & hashtags",
-        "Daily story updates that connect",
-        "Engagement support (replies & comments)",
-        "Reel ideas & concepts consulting",
-        "2 Platforms (Instagram & Facebook)",
-        "Bi-weekly performance reports",
-      ],
-    },
-    {
-      name: "Premium SMM",
-      price: "₹39,999/mo",
-      tagline: "Complete digital growth takeover.",
-      features: [
-        "Daily posting (Feed + Reels)",
-        "Advanced hashtag & SEO strategies",
-        "Continuous daily story updates",
-        "24/7 client engagement support app",
-        "Content development & shooting support",
-        "3 Platforms (Instagram, FB, LinkedIn/YT)",
-        "Weekly data analytics reporting",
-        "Dedicated account manager",
-      ],
-    },
-  ];
-
-  // 3. Creative Services Category Configurations
+  // 2. Creative Services Category Configurations
   const creativeServices: CreativeServiceCategory[] = [
     {
       title: "Graphic Designing",
@@ -239,6 +185,52 @@ export default function Pricing() {
       },
     },
     {
+      title: "Video Editing",
+      packages: {
+        starter: {
+          levelName: "Reel Editing",
+          price: "₹3,999",
+          tagline: "Perfect for social media influencers and standard reels.",
+          features: [
+            "5 Reels Edited (Under 60s)",
+            "Dynamic captions & text overlays",
+            "Sound design & trending audio sync",
+            "Color grading & transition effects",
+            "2 Revision cycles per reel",
+            "Delivery: 3-4 Days",
+          ],
+        },
+        professional: {
+          levelName: "Growth Campaign",
+          price: "₹8,999",
+          tagline: "Premium editing for active brand channels.",
+          features: [
+            "12 Reels Edited (Under 60s)",
+            "High-end motion graphics & sound FX",
+            "Custom brand style & b-roll assembly",
+            "AI voice enhancement & noise cleaning",
+            "4 Revision cycles per reel",
+            "Priority support",
+            "Delivery: 5-7 Days",
+          ],
+        },
+        premium: {
+          levelName: "Commercial / YouTube",
+          price: "₹17,999",
+          tagline: "Elite editing for advertisements and YouTube content.",
+          features: [
+            "Up to 3 Long-form (under 10m) or 20 Reels",
+            "Full color grading & sound mixing",
+            "Custom titles & intro template",
+            "Thumbnail design integration",
+            "Unlimited revision cycles",
+            "Dedicated video editor",
+            "Delivery: Flexible scheduling",
+          ],
+        },
+      },
+    },
+    {
       title: "Website Design",
       packages: {
         starter: {
@@ -269,11 +261,11 @@ export default function Pricing() {
           ],
         },
         premium: {
-          levelName: "Premium Custom Website",
+          levelName: "Premium Custom",
           price: "₹59,999",
           tagline: "Bespoke high-end digital web application.",
           features: [
-            "Custom bespoke Next.js architecture",
+            "Custom Next.js architecture",
             "GSAP/Lenis high-fidelity animations",
             "Interactive dashboard panels",
             "Custom copy and marketing funnel",
@@ -307,7 +299,7 @@ export default function Pricing() {
           </p>
 
           {/* Master Tab Switcher */}
-          <div className="relative mt-10 p-1.5 rounded-full bg-white/5 border border-white/10 flex items-center justify-between gap-1 w-full max-w-[650px] overflow-hidden">
+          <div className="relative mt-10 p-1.5 rounded-full bg-white/5 border border-white/10 flex items-center justify-between gap-1 w-full max-w-[450px] overflow-hidden">
             <button
               onClick={() => setActiveTab("campaigns")}
               className={`flex-grow py-3 px-4 md:px-6 rounded-full text-xs md:text-sm font-semibold transition-all relative z-10 interactive ${
@@ -321,23 +313,7 @@ export default function Pricing() {
                   transition={{ type: "spring", stiffness: 350, damping: 30 }}
                 />
               )}
-              Reel Campaigns (PDF Special)
-            </button>
-
-            <button
-              onClick={() => setActiveTab("monthly")}
-              className={`flex-grow py-3 px-4 md:px-6 rounded-full text-xs md:text-sm font-semibold transition-all relative z-10 interactive ${
-                activeTab === "monthly" ? "text-shaz-black" : "text-shaz-white/60 hover:text-shaz-white"
-              }`}
-            >
-              {activeTab === "monthly" && (
-                <motion.div
-                  layoutId="activePricingTab"
-                  className="absolute inset-0 bg-shaz-white rounded-full z-[-1]"
-                  transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                />
-              )}
-              Monthly Retainers (SMM)
+              Reel Campaigns
             </button>
 
             <button
@@ -401,7 +377,8 @@ export default function Pricing() {
                         {pkg.tagline}
                       </p>
 
-                      <div className="flex items-baseline gap-2 mb-6">
+                      <div className="flex items-baseline gap-2 mb-6 flex-wrap">
+                        <span className="text-xs text-white/50 self-end mb-1.5 font-mono uppercase tracking-wide">starts from</span>
                         <span className="text-4xl md:text-5xl font-black tracking-tight text-white">
                           {pkg.price}
                         </span>
@@ -437,8 +414,12 @@ export default function Pricing() {
                       </ul>
                     </div>
 
-                    <a
-                      href="#contact"
+                    <button
+                      onClick={() => {
+                        const whatsappMessage = `*Package Inquiry - SHAZ Creatives*\n\n💼 *Interested Package:* ${pkg.name}\n🏷️ *Category:* Reel Campaigns\n💰 *Pricing:* Starts from ${pkg.price}\n\nHello, I would like to start a project with this package. Please guide me on the next steps!`;
+                        const whatsappUrl = `https://wa.me/917338865248?text=${encodeURIComponent(whatsappMessage)}`;
+                        window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+                      }}
                       className={`w-full py-4 rounded-xl text-xs font-bold tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-1.5 interactive border ${
                         pkg.popular
                           ? "bg-shaz-white text-shaz-black border-shaz-white hover:bg-transparent hover:text-white"
@@ -447,86 +428,13 @@ export default function Pricing() {
                     >
                       Choose Package
                       <ArrowRight className="w-3.5 h-3.5" />
-                    </a>
+                    </button>
                   </div>
                 ))}
               </motion.div>
             )}
 
-            {/* 2. Monthly SMM Retainers Grid */}
-            {activeTab === "monthly" && (
-              <motion.div
-                key="monthly"
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                transition={{ duration: 0.5 }}
-                className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch"
-              >
-                {smmMonthly.map((pkg) => (
-                  <div
-                    key={pkg.name}
-                    className={`relative rounded-3xl p-8 flex flex-col justify-between overflow-hidden transition-all duration-500 hover:-translate-y-1 ${
-                      pkg.popular
-                        ? "bg-gradient-to-b from-[#110B24]/80 to-[#0A0A16]/90 border border-shaz-purple/40 shadow-[0_4px_30px_rgba(138,43,226,0.15)]"
-                        : "glass-card border border-white/5"
-                    }`}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-shaz-purple/5 to-transparent pointer-events-none" />
-
-                    <div>
-                      {pkg.popular && (
-                        <div className="absolute top-4 right-4 flex items-center gap-1 bg-gradient-to-r from-shaz-purple to-shaz-magenta text-[9px] font-bold tracking-[0.15em] text-white py-1 px-3.5 rounded-full uppercase shadow-md animate-pulse">
-                          <Sparkles className="w-2.5 h-2.5" />
-                          Recommended
-                        </div>
-                      )}
-
-                      <span className="text-xs font-mono font-bold tracking-widest text-shaz-white/40 uppercase">
-                        RETAINER PLAN
-                      </span>
-                      <h3 className="text-2xl font-black font-display tracking-tight text-white mt-1.5 mb-2.5">
-                        {pkg.name}
-                      </h3>
-                      <p className="text-xs text-shaz-white/60 font-light min-h-[36px] leading-relaxed mb-6">
-                        {pkg.tagline}
-                      </p>
-
-                      <div className="flex items-baseline gap-2 mb-6">
-                        <span className="text-4xl md:text-5xl font-black tracking-tight text-white">
-                          {pkg.price}
-                        </span>
-                      </div>
-
-                      <div className="h-[1px] w-full bg-white/10 mb-6" />
-
-                      <ul className="flex flex-col gap-3.5 mb-8">
-                        {pkg.features.map((feat) => (
-                          <li key={feat} className="flex items-start gap-2.5 text-xs text-shaz-white/70 font-light">
-                            <Check className="w-4 h-4 text-shaz-magenta shrink-0 mt-0.5" />
-                            <span>{feat}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <a
-                      href="#contact"
-                      className={`w-full py-4 rounded-xl text-xs font-bold tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-1.5 interactive border ${
-                        pkg.popular
-                          ? "bg-shaz-white text-shaz-black border-shaz-white hover:bg-transparent hover:text-white"
-                          : "bg-transparent text-white border-white/10 hover:bg-white/5 hover:border-white/20"
-                      }`}
-                    >
-                      Subscribe Plan
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </a>
-                  </div>
-                ))}
-              </motion.div>
-            )}
-
-            {/* 3. Creative Services Category Grid (With dynamic levels per card) */}
+            {/* 2. Creative Services Category Grid (With dynamic levels per card) */}
             {activeTab === "services" && (
               <motion.div
                 key="services"
@@ -534,7 +442,7 @@ export default function Pricing() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.5 }}
-                className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch"
               >
                 {creativeServices.map((service, idx) => {
                   // Determine level state for each card
@@ -547,6 +455,9 @@ export default function Pricing() {
                   } else if (idx === 1) {
                     level = shootingLevel;
                     setLevel = setShootingLevel;
+                  } else if (idx === 2) {
+                    level = editingLevel;
+                    setLevel = setEditingLevel;
                   } else {
                     level = webLevel;
                     setLevel = setWebLevel;
@@ -584,18 +495,19 @@ export default function Pricing() {
                           </div>
                         </div>
 
-                        <h3 className="text-2xl font-black font-display tracking-tight text-white mb-1.5">
+                        <h3 className="text-xl sm:text-2xl font-black font-display tracking-tight text-white mb-1.5">
                           {service.title}
                         </h3>
                         <p className="text-xs text-gradient-purple-magenta font-semibold mb-4">
                           {activePkg.levelName}
                         </p>
-                        <p className="text-xs text-shaz-white/50 font-light min-h-[32px] leading-relaxed mb-6">
+                        <p className="text-xs text-shaz-white/50 font-light min-h-[48px] leading-relaxed mb-6">
                           {activePkg.tagline}
                         </p>
 
-                        <div className="flex items-baseline gap-2 mb-6">
-                          <span className="text-4xl md:text-5xl font-black tracking-tight text-white">
+                        <div className="flex items-baseline gap-2 mb-6 flex-wrap">
+                          <span className="text-xs text-white/50 self-end mb-1.5 font-mono uppercase tracking-wide">starts from</span>
+                          <span className="text-3xl sm:text-4xl font-black tracking-tight text-white">
                             {activePkg.price}
                           </span>
                         </div>
@@ -613,13 +525,17 @@ export default function Pricing() {
                         </ul>
                       </div>
 
-                      <a
-                        href="#contact"
+                      <button
+                        onClick={() => {
+                          const whatsappMessage = `*Package Inquiry - SHAZ Creatives*\n\n💼 *Interested Package:* ${activePkg.levelName}\n🏷️ *Category:* Creative Services - ${service.title}\n💰 *Pricing:* Starts from ${activePkg.price}\n\nHello, I would like to start a project with this package. Please guide me on the next steps!`;
+                          const whatsappUrl = `https://wa.me/917338865248?text=${encodeURIComponent(whatsappMessage)}`;
+                          window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+                        }}
                         className="w-full py-4 rounded-xl text-xs font-bold tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-1.5 interactive border bg-transparent text-white border-white/10 hover:bg-white/5 hover:border-white/20"
                       >
                         Inquire Package
                         <ArrowRight className="w-3.5 h-3.5" />
-                      </a>
+                      </button>
                     </div>
                   );
                 })}
@@ -638,7 +554,7 @@ export default function Pricing() {
           {/* Subtle decoration lines */}
           <div className="absolute right-0 bottom-0 top-0 w-1/3 bg-radial-glow-purple opacity-20 pointer-events-none" />
 
-          <div className="flex flex-col gap-2 max-w-xl">
+          <div className="flex flex-col gap-2 max-w-xl text-left">
             <h4 className="text-sm font-semibold tracking-wide text-white flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-shaz-gold" />
               General Quotation Terms & Conditions
@@ -649,7 +565,7 @@ export default function Pricing() {
           </div>
 
           <a
-            href="https://wa.me/919884522083"
+            href="https://wa.me/917338865248"
             target="_blank"
             rel="noopener noreferrer"
             className="shrink-0 relative group inline-flex justify-center items-center gap-2 px-6 py-3.5 rounded-full text-xs font-semibold text-shaz-black bg-shaz-white hover:bg-transparent hover:text-shaz-white border border-shaz-white transition-all duration-350 interactive"

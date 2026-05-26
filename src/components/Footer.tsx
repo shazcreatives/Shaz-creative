@@ -33,16 +33,15 @@ export default function Footer() {
 
   const navLinks = [
     { name: "Services", href: "#services" },
-    { name: "Showcase", href: "#showcase" },
     { name: "Portfolio", href: "#portfolio" },
     { name: "Pricing", href: "#pricing" },
-    { name: "About", href: "#about" },
     { name: "Contact", href: "#contact" },
+    { name: "About", href: "#about" },
   ];
 
   const socialLinks = [
     { name: "Instagram", href: "https://www.instagram.com/_shaz_creative_/", icon: InstagramIcon },
-    { name: "WhatsApp", href: "https://wa.me/919884522083", icon: MessageSquare },
+    { name: "WhatsApp", href: "https://wa.me/917338865248", icon: MessageSquare },
     { name: "Email Us", href: "mailto:shazconsulting77@gmail.com", icon: Mail },
   ];
 

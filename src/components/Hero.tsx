@@ -96,6 +96,15 @@ export default function Hero() {
           />
         </motion.div>
 
+        {/* Trust Badge */}
+        <motion.div
+          variants={itemVariants}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono tracking-widest uppercase text-shaz-white/70 mb-5 backdrop-blur-md shadow-lg"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+          <span>Verified Creative Desk // 140+ Productions Dispatched</span>
+        </motion.div>
+
         {/* Title */}
         <motion.h1 
           className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-shaz-white leading-[1.08] mb-6 font-display max-w-4xl"
@@ -112,7 +121,7 @@ export default function Hero() {
           variants={itemVariants}
           className="text-base sm:text-lg md:text-xl text-shaz-white/60 font-light max-w-2xl mb-10 leading-relaxed"
         >
-          Premium content creation, branding, video production & digital growth.
+          Premium content creation, branding, cinematic video production & client growth models engineered to convert.
         </motion.p>
 
         {/* Action Buttons */}
@@ -134,6 +143,18 @@ export default function Hero() {
             <Play className="w-4 h-4 fill-current text-shaz-white/80 group-hover:scale-105 transition-transform" />
             View Pricing
           </a>
+        </motion.div>
+
+        {/* Brand Guarantees */}
+        <motion.div
+          variants={itemVariants}
+          className="mt-12 flex flex-wrap justify-center items-center gap-x-6 gap-y-2.5 text-[9px] font-mono tracking-widest text-white/30 uppercase"
+        >
+          <span>✓ 100% Retainer Transparency</span>
+          <span className="hidden sm:inline">•</span>
+          <span>✓ Direct Strategic Desk Access</span>
+          <span className="hidden sm:inline">•</span>
+          <span>✓ Cinematic Quality Guarantee</span>
         </motion.div>
       </motion.div>
 

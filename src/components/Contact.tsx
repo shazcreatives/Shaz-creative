@@ -49,7 +49,7 @@ export default function Contact() {
       `💰 *Project Budget:* ${selectedBudget}\n\n` +
       `📝 *Message & Requirements:*\n${formData.message}`;
 
-    const whatsappUrl = `https://wa.me/919884522083?text=${encodeURIComponent(whatsappMessage)}`;
+    const whatsappUrl = `https://wa.me/917338865248?text=${encodeURIComponent(whatsappMessage)}`;
 
     // Simulate API request/loader before redirecting
     setTimeout(() => {
@@ -103,15 +103,15 @@ export default function Contact() {
               {/* Direct Channels */}
               <div className="flex flex-col gap-5 mb-10">
                 <a
-                  href="tel:+919884522083"
+                  href="tel:+917338865248"
                   className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 hover:bg-white/10 transition-all duration-350 interactive"
                 >
                   <div className="w-10 h-10 rounded-xl bg-shaz-purple/10 flex items-center justify-center text-shaz-purple">
                     <Phone className="w-4 h-4" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[10px] text-white/45 font-mono uppercase">Call Creative Desk</span>
-                    <span className="text-sm font-bold text-white">+91 98845 22083</span>
+                    <span className="text-[10px] text-white/45 font-mono uppercase">Call Creative Desk // Verified</span>
+                    <span className="text-sm font-bold text-white">+91 73388 65248</span>
                   </div>
                 </a>
 
@@ -123,13 +123,13 @@ export default function Contact() {
                     <Mail className="w-4 h-4" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[10px] text-white/45 font-mono uppercase">Email Creative Desk</span>
+                    <span className="text-[10px] text-white/45 font-mono uppercase">Email Creative Desk // Verified</span>
                     <span className="text-sm font-bold text-white">shazconsulting77@gmail.com</span>
                   </div>
                 </a>
 
                 <a
-                  href="https://wa.me/919884522083"
+                  href="https://wa.me/917338865248"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-green-500/10 to-green-600/5 border border-green-500/20 hover:border-green-500/30 hover:bg-green-500/15 transition-all duration-350 interactive"
@@ -138,7 +138,7 @@ export default function Contact() {
                     <MessageSquare className="w-4 h-4" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[10px] text-green-400 font-mono uppercase">WhatsApp Chat</span>
+                    <span className="text-[10px] text-green-400 font-mono uppercase">WhatsApp Business // Secure Channel</span>
                     <span className="text-sm font-bold text-white">Open Instant WhatsApp Link</span>
                   </div>
                 </a>
@@ -199,6 +199,13 @@ export default function Contact() {
                     onSubmit={handleSubmit}
                     className="flex flex-col gap-6"
                   >
+                    <div className="text-left border-b border-white/5 pb-4 mb-2">
+                      <h3 className="text-xl font-bold font-display text-white mb-1.5">Creative Inquiry Form</h3>
+                      <p className="text-xs text-white/50 leading-relaxed font-light">
+                        Fill out this brief to outline your project requirements. Submitting will open a direct WhatsApp connection to our creative desk.
+                      </p>
+                    </div>
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-left">
                       <div className="flex flex-col gap-2">
                         <label htmlFor="name" className="text-[10px] font-mono tracking-wider text-white/40 uppercase">Your Name</label>

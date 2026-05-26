@@ -34,9 +34,9 @@ export default function Home() {
             {/* <Showcase /> */}
             <Portfolio />
             <Pricing />
+            <Contact />
             <Testimonials />
             <About />
-            <Contact />
           </main>
           <Footer />
         </>
