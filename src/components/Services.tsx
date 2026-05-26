@@ -15,8 +15,7 @@ function ServiceCard({
   icon: Icon, 
   colorClass,
   label,
-  isActive,
-  driveUrl
+  isActive
 }: { 
   title: string; 
   description: string; 
@@ -24,7 +23,6 @@ function ServiceCard({
   colorClass: string;
   label: string;
   isActive: boolean;
-  driveUrl?: string;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [coords, setCoords] = useState({ x: 0, y: 0 });
@@ -91,18 +89,6 @@ function ServiceCard({
           {description}
         </p>
       </div>
-
-      {driveUrl && isActive && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            window.open(driveUrl, "_blank", "noopener,noreferrer");
-          }}
-          className="relative z-20 mt-3 inline-flex items-center gap-1.5 self-start px-3 py-1.5 text-[9px] font-mono font-bold tracking-wider text-shaz-magenta border border-shaz-magenta/30 bg-shaz-magenta/5 hover:bg-shaz-magenta/15 hover:border-shaz-magenta/50 rounded-xl transition-all duration-300 pointer-events-auto shadow-md shadow-black/10 animate-fade-in"
-        >
-          <span>VIEW DRIVE ASSETS &rarr;</span>
-        </button>
-      )}
     </div>
   );
 }
@@ -220,18 +206,8 @@ export default function Services() {
         if (absX > absY) {
           // Horizontal scroll: prevent page navigation (back/forward history swipe gestures)
           e.preventDefault();
-          if (now - lastScrollTime.current > 400) {
+          if (now - lastScrollTime.current > 300) {
             if (e.deltaX > 0) {
-              setActiveIndex((prev) => prev + 1);
-            } else {
-              setActiveIndex((prev) => prev - 1);
-            }
-            lastScrollTime.current = now;
-          }
-        } else {
-          // Vertical scroll: do not preventDefault to avoid scroll trapping, but slide the carousel.
-          if (now - lastScrollTime.current > 500) {
-            if (e.deltaY > 0) {
               setActiveIndex((prev) => prev + 1);
             } else {
               setActiveIndex((prev) => prev - 1);
@@ -284,13 +260,13 @@ export default function Services() {
     const spacing = cardWidth * (isMobile ? 1.25 : 1.08);
     const absDiff = Math.abs(idxDiff);
 
-    // Hide everything beyond the immediate neighbors on mobile (3 cards visible max)
-    if (isMobile && absDiff > 1) {
+    // On mobile, hide all non-centered cards completely to avoid overlaps/congestion
+    if (isMobile && absDiff > 0) {
       return {
         x: idxDiff * spacing,
-        scale: 0.6,
+        scale: 0.8,
         opacity: 0,
-        blur: 8,
+        blur: 4,
         zIndex: 0
       };
     }
@@ -417,7 +393,7 @@ export default function Services() {
                     className="absolute"
                     style={{
                       width: `${cardWidth}px`,
-                      height: isMobile ? "280px" : "240px",
+                      height: isMobile ? "260px" : "220px",
                     }}
                     animate={{
                       x: x,
@@ -426,7 +402,7 @@ export default function Services() {
                       zIndex: zIndex,
                       filter: `blur(${blur}px)`,
                     }}
-                    transition={{ type: "spring", stiffness: 60, damping: 18 }}
+                    transition={{ type: "spring", stiffness: 120, damping: 20 }}
                   >
                     <div 
                       className="w-full h-full cursor-pointer pointer-events-auto" 
@@ -434,6 +410,9 @@ export default function Services() {
                         if (!isActive) {
                           // Slides smoothly by relative index jumps
                           setActiveIndex(activeIndex + idxDiff);
+                        } else if (service.driveUrl) {
+                          // Clicking the centered active card directly opens its Drive URL
+                          window.open(service.driveUrl, "_blank", "noopener,noreferrer");
                         }
                       }}
                     >
@@ -444,7 +423,6 @@ export default function Services() {
                         colorClass={service.colorClass}
                         label={service.label}
                         isActive={isActive}
-                        driveUrl={service.driveUrl}
                       />
                     </div>
                   </motion.div>
