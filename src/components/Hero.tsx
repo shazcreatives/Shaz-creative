@@ -141,7 +141,7 @@ export default function Hero() {
             className="w-full sm:w-auto relative group inline-flex justify-center items-center gap-2 px-8 py-4 rounded-full text-sm font-semibold text-shaz-white bg-transparent hover:bg-white/5 border border-white/10 hover:border-white/20 transition-all duration-350 interactive"
           >
             <Play className="w-4 h-4 fill-current text-shaz-white/80 group-hover:scale-105 transition-transform" />
-            View Pricing
+            View Packages
           </a>
         </motion.div>
 

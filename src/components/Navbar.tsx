@@ -23,7 +23,7 @@ export default function Navbar() {
   const navLinks = [
     { name: "Services", href: "#services" },
     { name: "Portfolio", href: "#portfolio" },
-    { name: "Pricing", href: "#pricing" },
+    { name: "Packages", href: "#pricing" },
     { name: "Contact", href: "#contact" },
     { name: "About", href: "#about" },
   ];

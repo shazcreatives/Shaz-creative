@@ -288,14 +288,14 @@ export default function Pricing() {
         {/* Section Header */}
         <div className="flex flex-col items-center text-center mb-16 md:mb-20">
           <span className="text-xs font-semibold tracking-[0.3em] font-mono text-shaz-white/40 uppercase mb-3">
-            PRICING OPTIONS
+            OUR PACKAGES
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-shaz-white mb-6">
-            Transparent Pricing.{" "}
+            Tailored Packages.{" "}
             <span className="text-gradient-purple-magenta">Built For Impact.</span>
           </h2>
           <p className="text-shaz-white/60 font-light text-base md:text-lg max-w-2xl leading-relaxed">
-            Choose the mode of engagement that fits your scale. Simple, transparent tier plans with no hidden agency fees.
+            Choose the mode of engagement that fits your scale. Simple tier plans tailored to amplify your brand.
           </p>
 
           {/* Master Tab Switcher */}
@@ -377,13 +377,7 @@ export default function Pricing() {
                         {pkg.tagline}
                       </p>
 
-                      <div className="flex items-baseline gap-2 mb-6 flex-wrap">
-                        <span className="text-xs text-white/50 self-end mb-1.5 font-mono uppercase tracking-wide">starts from</span>
-                        <span className="text-4xl md:text-5xl font-black tracking-tight text-white">
-                          {pkg.price}
-                        </span>
-                        <span className="text-xs font-mono text-white/40">one-off</span>
-                      </div>
+
 
                       <div className="h-[1px] w-full bg-white/10 mb-6" />
 
@@ -416,7 +410,7 @@ export default function Pricing() {
 
                     <button
                       onClick={() => {
-                        const whatsappMessage = `*Package Inquiry - SHAZ Creatives*\n\n💼 *Interested Package:* ${pkg.name}\n🏷️ *Category:* Reel Campaigns\n💰 *Pricing:* Starts from ${pkg.price}\n\nHello, I would like to start a project with this package. Please guide me on the next steps!`;
+                        const whatsappMessage = `*Package Inquiry - SHAZ Creatives*\n\n💼 *Interested Package:* ${pkg.name}\n🏷️ *Category:* Reel Campaigns\n\nHello, I would like to start a project with this package. Please guide me on the next steps!`;
                         const whatsappUrl = `https://wa.me/917338865248?text=${encodeURIComponent(whatsappMessage)}`;
                         window.open(whatsappUrl, "_blank", "noopener,noreferrer");
                       }}
@@ -505,12 +499,7 @@ export default function Pricing() {
                           {activePkg.tagline}
                         </p>
 
-                        <div className="flex items-baseline gap-2 mb-6 flex-wrap">
-                          <span className="text-xs text-white/50 self-end mb-1.5 font-mono uppercase tracking-wide">starts from</span>
-                          <span className="text-3xl sm:text-4xl font-black tracking-tight text-white">
-                            {activePkg.price}
-                          </span>
-                        </div>
+
 
                         <div className="h-[1px] w-full bg-white/10 mb-6" />
 
@@ -527,7 +516,7 @@ export default function Pricing() {
 
                       <button
                         onClick={() => {
-                          const whatsappMessage = `*Package Inquiry - SHAZ Creatives*\n\n💼 *Interested Package:* ${activePkg.levelName}\n🏷️ *Category:* Creative Services - ${service.title}\n💰 *Pricing:* Starts from ${activePkg.price}\n\nHello, I would like to start a project with this package. Please guide me on the next steps!`;
+                          const whatsappMessage = `*Package Inquiry - SHAZ Creatives*\n\n💼 *Interested Package:* ${activePkg.levelName}\n🏷️ *Category:* Creative Services - ${service.title}\n\nHello, I would like to start a project with this package. Please guide me on the next steps!`;
                           const whatsappUrl = `https://wa.me/917338865248?text=${encodeURIComponent(whatsappMessage)}`;
                           window.open(whatsappUrl, "_blank", "noopener,noreferrer");
                         }}
@@ -560,7 +549,7 @@ export default function Pricing() {
               General Quotation Terms & Conditions
             </h4>
             <p className="text-xs text-shaz-white/50 leading-relaxed font-light">
-              Quotation validity is 7 days. Pricing includes revisions depending on package tier. Additional revisions are priced at ₹150/cycle. Payment schedules are structured as: 50% Advance, 25% Midway, and 25% Final milestone. Note that influencer collaborations and ad budgets are separate from campaign retainer packages.
+              Quotation validity is 7 days. Packages include revisions depending on the tier. Additional revisions are charged per cycle. Payment schedules are structured as: 50% Advance, 25% Midway, and 25% Final milestone. Note that influencer collaborations and ad budgets are separate from campaign retainer packages.
             </p>
           </div>
 
